@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle;
 
-import br.com.unisc.project.controller.CategoryController;
 
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
@@ -27,7 +26,6 @@ public class MainView extends JFrame {
 	private JButton buttonCategories; // Botão para acessar as categorias
 	private JButton buttonProducts; // Botão para acessar os produtos
 	private JButton buttonQueries; // Botão para acessar as consultas
-	private CategoryController categoryController;
 
 	// Texto para label de instruções
 	private final String stringInstructions = "<html><center>Bem-vindo ao Sistema de Produtos."
@@ -55,7 +53,6 @@ public class MainView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Criação dos componentes
-		categoryController = new CategoryController();
 		panelMain = new JPanel();
 		labelInstructions = new JLabel(stringInstructions, JLabel.CENTER);
 		buttonCategories = new JButton("Administrar categorias");

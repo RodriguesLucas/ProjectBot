@@ -5,7 +5,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 
-import br.com.unisc.project.controller.viewController.CategoryViewController;
+import br.com.unisc.project.controller.CategoryViewController;
+
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import java.awt.event.KeyEvent;

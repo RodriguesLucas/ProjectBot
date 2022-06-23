@@ -8,6 +8,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import br.com.unisc.project.service.ProductQueryBotService;
 
+
 @Component
 public class BotStarterController implements CommandLineRunner {
 

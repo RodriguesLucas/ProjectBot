@@ -1,9 +1,10 @@
-package br.com.unisc.project.controller.viewController;
+package br.com.unisc.project.controller;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import br.com.unisc.project.service.viewService.CategoryViewService;
+import br.com.unisc.project.service.CategoryViewService;
+
 
 public class CategoryViewController {
 	private CategoryViewService categoryViewService = new CategoryViewService();

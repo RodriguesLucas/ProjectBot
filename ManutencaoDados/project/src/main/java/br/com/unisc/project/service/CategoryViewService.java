@@ -1,4 +1,4 @@
-package br.com.unisc.project.service.viewService;
+package br.com.unisc.project.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -6,12 +6,11 @@ import java.net.URISyntaxException;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.apache.http.HttpEntity;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.unisc.project.dtos.CategoryDto;
+
 
 public class CategoryViewService {
 	private static final String URlBase = "http://localhost:8080/category";
@@ -26,7 +25,7 @@ public class CategoryViewService {
 		}
 	}
 
-	public void createdNewCategory(JTextField textFieldDescriptionAdd, JComboBox comboBoxCategoryParentAdd) {
+	/*public void createdNewCategory(JTextField textFieldDescriptionAdd, JComboBox comboBoxCategoryParentAdd) {
 		if (textFieldDescriptionAdd.getText() == null || textFieldDescriptionAdd.getText().trim().isEmpty()) {
 			throw new RuntimeException("Texto vazio");
 		}
@@ -55,7 +54,7 @@ public class CategoryViewService {
 		textFieldDescriptionAdd.setText("");
 		comboBoxCategoryParentAdd.removeAllItems();
 		setComboBoxCategoryParentAdd(comboBoxCategoryParentAdd);
-	}
+	}*/
 
 	public CategoryDto findCategoryByName(String name) {
 		String uri = URlBase.concat("/").concat(name);
@@ -94,7 +93,7 @@ public class CategoryViewService {
 		}
 	}
 
-	public void putCategory(JComboBox comboBoxCategoryParentEdit, JComboBox comboBoxCategoryEdit,
+	/*public void putCategory(JComboBox comboBoxCategoryParentEdit, JComboBox comboBoxCategoryEdit,
 			JTextField textFieldNewDescriptionEdit) {
 
 		CategoryDto dto = findCategoryByName(comboBoxCategoryEdit.getSelectedItem().toString());
@@ -114,7 +113,7 @@ public class CategoryViewService {
 		}
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.put(uri, categoryDto);
-	}
+	}*/
 
 	public void setComboBoxCategoryDelete(JComboBox comboBoxCategoryDelete) {
 		CategoryDto[] categoryDtos = findCategoryParent();
@@ -123,6 +122,17 @@ public class CategoryViewService {
 			comboBoxCategoryDelete.addItem(categoryDto.getDescription());
 		}
 
+	}
+
+	public void createdNewCategory(JTextField textFieldDescriptionAdd, JComboBox comboBoxCategoryParentAdd) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void putCategory(JComboBox comboBoxCategoryParentEdit, JComboBox comboBoxCategoryEdit,
+			JTextField textFieldNewDescriptionEdit) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -3,6 +3,7 @@ package br.com.unisc.project.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class CategoryService {
 	public List<CategoryDto> findCategory() {
 		return null;
 	}
-	
+
 	public CategoryDto findByNameCategory(String name) {
 		Optional<CategoryEntity> findByDescription = categoryRepository.findByDescription(name);
 		return new CategoryDto(findByDescription.get());
@@ -35,21 +36,17 @@ public class CategoryService {
 
 	@Transactional
 	public List<CategoryDto> findCategoryParent() {
-		List<CategoryDto> list = new ArrayList<>();
 		List<CategoryEntity> categorEntityOptional = categoryRepository.findAll();
-		for (CategoryEntity categoryEntity : categorEntityOptional) {
-			Optional<ProductEntity> productCategoryOptional = productRepository
-					.findByCategoryEntityId(categoryEntity.getId());
-			if (!productCategoryOptional.isPresent()) {
-				list.add(new CategoryDto(categoryEntity));
-			}
-		}
-		return list;
+		return categorEntityOptional.stream().map(CategoryDto::new).collect(Collectors.toList());
 	}
 
-	public List<CategoryEntity> findAll() {
+	public List<CategoryDto> findAll() {
 		List<CategoryEntity> categoryEntities = categoryRepository.findAll();
-		return categoryEntities;
+		List<CategoryDto> categoryDtos = new ArrayList<CategoryDto>();
+		for (CategoryEntity categoryEntity : categoryEntities) {
+			categoryDtos.add(new CategoryDto(categoryEntity));
+		}
+		return categoryDtos;
 	}
 
 	@Transactional
@@ -120,7 +117,5 @@ public class CategoryService {
 		}
 		throw new RuntimeException("Categoria ligado a um produto!");
 	}
-
-	
 
 }

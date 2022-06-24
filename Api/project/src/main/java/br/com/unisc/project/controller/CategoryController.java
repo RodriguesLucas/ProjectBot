@@ -29,7 +29,7 @@ public class CategoryController {
 	}
 	
 	@GetMapping
-	public List<CategoryEntity> findAll() {
+	public List<CategoryDto> findAll() {
 		return categoryService.findAll();
 	}
 	

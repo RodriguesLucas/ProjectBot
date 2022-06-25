@@ -2,6 +2,8 @@ package br.com.unisc.project.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Date;
+import java.time.Instant;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,8 @@ public class ProductQueryBotService extends TelegramLongPollingBot {
 	
 	@Override
 	public void onUpdateReceived(Update update) {
+		
+		System.out.println(Date.from(Instant.ofEpochSecond(update.getMessage().getDate())).toString());
 		String message = update.getMessage().getText().toLowerCase();
 		String chatId = update.getMessage().getChatId().toString();
 		System.out.println(chatId);

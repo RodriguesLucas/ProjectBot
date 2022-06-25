@@ -3,6 +3,7 @@ package br.com.unisc.project.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +44,7 @@ public class CategoryController {
 	}
 
 	@PostMapping
-	public CategoryDto add(@RequestBody CategoryDto categoryDto) {
+	public ResponseEntity<CategoryDto> add(@RequestBody CategoryDto categoryDto) {
 		return categoryService.add(categoryDto);
 	}
 

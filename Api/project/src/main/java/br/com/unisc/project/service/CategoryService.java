@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,18 +41,15 @@ public class CategoryService {
 		List<CategoryEntity> categorEntityOptional = categoryRepository.findAll();
 		return categorEntityOptional.stream().map(CategoryDto::new).collect(Collectors.toList());
 	}
-
+	
+	@Transactional
 	public List<CategoryDto> findAll() {
 		List<CategoryEntity> categoryEntities = categoryRepository.findAll();
-		List<CategoryDto> categoryDtos = new ArrayList<CategoryDto>();
-		for (CategoryEntity categoryEntity : categoryEntities) {
-			categoryDtos.add(new CategoryDto(categoryEntity));
-		}
-		return categoryDtos;
+		return categoryEntities.stream().map(CategoryDto::new).collect(Collectors.toList());
 	}
 
 	@Transactional
-	public CategoryDto add(CategoryDto categoryDto) {
+	public ResponseEntity<CategoryDto> add(CategoryDto categoryDto) {
 		CategoryEntity entity = new CategoryEntity();
 		if (categoryDto.getCategoryParentId() == null) {
 			Optional<CategoryEntity> findDescriptionOptional = categoryRepository
@@ -58,7 +57,7 @@ public class CategoryService {
 			if (!findDescriptionOptional.isPresent()) {
 				entity.setDescription(categoryDto.getDescription());
 				entity.setCategoryParent(null);
-				return new CategoryDto(categoryRepository.save(entity));
+				return ResponseEntity.ok().body(new CategoryDto(categoryRepository.save(entity)));
 			}
 			throw new RuntimeException("Descrição já contém no banco de dados!");
 		} else {
@@ -73,7 +72,7 @@ public class CategoryService {
 					if (!productOptional.isPresent()) {
 						entity.setDescription(categoryDto.getDescription());
 						entity.setCategoryParent(optionalCategoryOptional.get());
-						return new CategoryDto(categoryRepository.save(entity));
+						return ResponseEntity.ok().body(new CategoryDto(categoryRepository.save(entity)));
 					}
 					throw new RuntimeException("Produto ligado a essa categoria!");
 				}
@@ -85,8 +84,8 @@ public class CategoryService {
 
 	@Transactional
 	public CategoryDto put(CategoryDto categoryDto, Long id) {
-		Optional<CategoryEntity> categoryParentOptional = categoryRepository.findByCategoryParentId(id);
-		if (!categoryParentOptional.isPresent()) {
+		Optional<CategoryEntity> categoryParentOptional = categoryRepository.buscarCategoria(categoryDto.getId());
+		if (categoryParentOptional.isPresent()) {
 			Optional<ProductEntity> productCategoryOptional = productRepository.findByCategoryEntityId(id);
 			if (!productCategoryOptional.isPresent()) {
 				Optional<CategoryEntity> findDescriptionOptional = categoryRepository
@@ -108,7 +107,7 @@ public class CategoryService {
 	public CategoryDto delete(Long id) {
 		Optional<ProductEntity> productCategoryOptional = productRepository.findByCategoryEntityId(id);
 		if (!productCategoryOptional.isPresent()) {
-			Optional<CategoryEntity> category = categoryRepository.findByCategoryParentId(id);
+			Optional<CategoryEntity> category = categoryRepository.findById(id);
 			if (!category.isPresent()) {
 				categoryRepository.deleteById(id);
 				return new CategoryDto(category.get());

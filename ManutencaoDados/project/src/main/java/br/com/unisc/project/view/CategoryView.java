@@ -237,13 +237,14 @@ public class CategoryView extends JFrame {
 
 		buttonCancelAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CategoryView.this.dispose();
+				
 			}
 		});
 
 		buttonConfirmEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				categoryViewController.putCategory(comboBoxCategoryParentEdit, comboBoxCategoryEdit, textFieldNewDescriptionEdit);
+				CategoryView.this.dispose();
 			}
 		});
 

@@ -3,6 +3,7 @@ package br.com.unisc.project.repositories;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.unisc.project.entities.CategoryEntity;
@@ -14,6 +15,8 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long>{
 
 	void deleteByCategoryParentId(Long id);
 
-	Optional<CategoryEntity> findByCategoryParentId(Long id);
+	@Query( )
+	Optional<CategoryEntity> findById(Long id);
+
 
 }

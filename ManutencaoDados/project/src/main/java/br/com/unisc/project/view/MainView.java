@@ -67,8 +67,14 @@ public class MainView extends JFrame {
 				new ProductView("Produtos");
 			}
 		});
+		
 		buttonQueries = new JButton("Verificar consultas");
-
+		buttonQueries.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new HistoryView("Histórico de produtos");
+			}
+		});
+		
 		setContentPane(panelMain); // Define o painel da janela
 
 		// Atribui tamanhos mínimos aos botões e à janela

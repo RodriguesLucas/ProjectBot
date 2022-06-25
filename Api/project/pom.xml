@@ -8,7 +8,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.project</groupId>
-	<artifactId>dscatalog</artifactId>
+	<artifactId>ProjetcApi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>project</name>
 	<description>Project unisc</description>

@@ -1,6 +1,5 @@
 package br.com.unisc.project.dtos;
 
-
 public class CategoryDto {
 
 	private Long id;
@@ -10,6 +9,7 @@ public class CategoryDto {
 	public CategoryDto() {
 
 	}
+
 	public CategoryDto(String description, Long categoryParentId, Long id) {
 		this.id = id;
 		this.description = description;
@@ -35,5 +35,9 @@ public class CategoryDto {
 	public Long getCategoryParentId() {
 		return categoryParentId;
 	}
-	
+
+	public void setCategoryParentId(Long categoryParentId) {
+		this.categoryParentId = categoryParentId;
+	}
+
 }

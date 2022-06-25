@@ -15,7 +15,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long>{
 
 	void deleteByCategoryParentId(Long id);
 
-	@Query(value = "select c from category where c.id=?1", nativeQuery = true)
+	@Query(value = "select * from category c where c.id=:id", nativeQuery = true)
 	Optional<CategoryEntity> findById(Long id);
 
 

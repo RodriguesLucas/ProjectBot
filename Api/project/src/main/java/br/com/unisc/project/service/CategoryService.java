@@ -1,5 +1,6 @@
 package br.com.unisc.project.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,12 +35,29 @@ public class CategoryService {
 		return new CategoryDto(findByDescription.get());
 	}
 
+	// Se tiver produto cadastrado com esse id não pode
+	// SE ela for pai também não pode
 	@Transactional
 	public List<CategoryDto> findCategoryParent() {
 		List<CategoryEntity> categorEntityOptional = categoryRepository.findAll();
-		return categorEntityOptional.stream().map(CategoryDto::new).collect(Collectors.toList());
+		List<ProductEntity> productOptional = productRepository.findAll();
+		List<CategoryDto> list = new ArrayList<CategoryDto>();
+		for (CategoryEntity categoryEntity : categorEntityOptional) {
+			for (ProductEntity productEntity : productOptional) {
+				if (categoryEntity.getId() != categoryEntity.getCategoryParent().getId()) {
+					if (categoryEntity.getId() != productEntity.getCategoryId().getId()) {
+						CategoryDto categoryDto = new CategoryDto();
+						categoryDto.setId(categoryEntity.getId());
+						categoryDto.setCategoryParentId(categoryEntity.getCategoryParent().getId());
+						categoryDto.setDescription(categoryEntity.getDescription());
+					}
+				}
+			}
+		}
+
+		return list;
 	}
-	
+
 	@Transactional
 	public List<CategoryDto> findAll() {
 		List<CategoryEntity> categoryEntities = categoryRepository.findAll();
@@ -82,7 +100,8 @@ public class CategoryService {
 
 	@Transactional
 	public CategoryDto put(CategoryDto categoryDto, Long id) {
-		Optional<CategoryEntity> categoryParentOptional = categoryRepository.findById(categoryDto.getId());
+		Optional<CategoryEntity> categoryParentOptional = categoryRepository
+				.findById(categoryDto.getCategoryParentId());
 		if (categoryParentOptional.isPresent()) {
 			Optional<ProductEntity> productCategoryOptional = productRepository.findByCategoryEntityId(id);
 			if (!productCategoryOptional.isPresent()) {

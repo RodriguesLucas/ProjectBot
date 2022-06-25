@@ -14,6 +14,15 @@ public class QueryDto {
 		
 	}
 	
+	// Construtor com todos os atributos
+	public QueryDto(Long clientId, Long productId, Instant date) {
+		this.clientId = clientId;
+		this.productId = productId;
+		this.date = date;
+	}
+
+
+
 	// Getters e setters
 	public Long getClientId() {
 		return clientId;

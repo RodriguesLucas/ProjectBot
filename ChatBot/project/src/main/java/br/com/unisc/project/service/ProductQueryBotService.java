@@ -15,11 +15,12 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 public class ProductQueryBotService extends TelegramLongPollingBot implements Callback {
 
-	private ArrayList<Session> activeSessions; // Sessões de clientes ativas
+	private ArrayList<Session> activeSessions = new ArrayList<>(); // Sessões de clientes ativas
 	
 	// Método chamado quando o bot recebe mensagens
 	@Override
 	public void onUpdateReceived(Update update) {
+		System.out.println("gfghfhfhgfghf");
 		long chatId = update.getMessage().getChatId();
 		boolean hasActiveSession = false;
 		// Checa se já existe uma sessão com o remetente da mensagem

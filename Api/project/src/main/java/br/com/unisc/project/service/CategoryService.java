@@ -30,9 +30,18 @@ public class CategoryService {
 		return null;
 	}
 
+	public List<CategoryDto> findChildrenById(Long id){
+		return categoryRepository.findAllByParentId(id);
+	}
+	
 	public CategoryDto findByNameCategory(String name) {
 		Optional<CategoryEntity> findByDescription = categoryRepository.findByDescription(name);
 		return new CategoryDto(findByDescription.get());
+	}
+	
+	public CategoryDto findCategoryById(Long id) {
+		Optional<CategoryEntity> findById = categoryRepository.findById(id);
+		return new CategoryDto(findById.get());
 	}
 
 	// Se tiver produto cadastrado com esse id não pode

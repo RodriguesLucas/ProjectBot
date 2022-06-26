@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import br.com.unisc.project.dtos.CategoryDto;
-import br.com.unisc.project.entities.CategoryEntity;
 import br.com.unisc.project.service.CategoryService;
 
 @RestController
@@ -29,6 +28,11 @@ public class CategoryController {
 		return categoryService.findByNameCategory(name);
 	}
 	
+	@GetMapping(value = "/id/{id}")
+	public CategoryDto findById(@PathVariable Long id) {
+		return categoryService.findCategoryById(id);
+	}
+	
 	@GetMapping
 	public List<CategoryDto> findAll() {
 		return categoryService.findAll();
@@ -39,6 +43,11 @@ public class CategoryController {
 		return categoryService.findCategoryParent();
 	}
 
+	@GetMapping(value = "/children/{id}")
+	public List<CategoryDto> findChildrenById(@PathVariable Long id){
+		return categoryService.findChildrenById(id);
+	}
+	
 	public List<CategoryDto> findCategory() {
 		return categoryService.findCategory();
 	}

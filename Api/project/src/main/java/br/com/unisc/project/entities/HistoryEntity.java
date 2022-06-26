@@ -35,5 +35,43 @@ public class HistoryEntity implements Serializable{
 	private ProductEntity productId;
 	
 	private Instant instant;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public ClientEntity getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(ClientEntity clientId) {
+		this.clientId = clientId;
+	}
+
+	public ProductEntity getProductId() {
+		return productId;
+	}
+
+	public void setProductId(ProductEntity productId) {
+		this.productId = productId;
+	}
+
+	public Instant getInstant() {
+		return instant;
+	}
+
+	public void setInstant(Instant instant) {
+		this.instant = instant;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
+	
 	
 }

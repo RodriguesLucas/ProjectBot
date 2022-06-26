@@ -1,7 +1,7 @@
 package br.com.unisc.project.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,15 +19,7 @@ public class ProductService {
 	@Transactional
 	public List<ProductDto> findProductsByCategoryId(Long id) {
 		List<ProductEntity> products = productRepository.findAllByCategoryId(id);
-		List<ProductDto> productsDto = new ArrayList<>();
-		for(ProductEntity p : products) {
-			ProductDto dto = new ProductDto(
-					p.getId(), p.getDescription(),
-					p.getInfoTec(), p.getPhoto(),
-					p.getPrice(), p.getCategoryId().getId());
-			productsDto.add(dto);
-		}
-		return productsDto;
+		return products.stream().map(ProductDto::new).collect(Collectors.toList());
 	}
 
 }

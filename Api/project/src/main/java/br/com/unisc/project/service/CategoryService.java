@@ -30,15 +30,15 @@ public class CategoryService {
 		return null;
 	}
 
-	public List<CategoryDto> findChildrenById(Long id){
+	public List<CategoryDto> findChildrenById(Long id) {
 		return categoryRepository.findAllByParentId(id);
 	}
-	
+
 	public CategoryDto findByNameCategory(String name) {
 		Optional<CategoryEntity> findByDescription = categoryRepository.findByDescription(name);
 		return new CategoryDto(findByDescription.get());
 	}
-	
+
 	public CategoryDto findCategoryById(Long id) {
 		Optional<CategoryEntity> findById = categoryRepository.findById(id);
 		return new CategoryDto(findById.get());
@@ -51,19 +51,8 @@ public class CategoryService {
 		List<CategoryEntity> categorEntityOptional = categoryRepository.findAll();
 		List<ProductEntity> productOptional = productRepository.findAll();
 		List<CategoryDto> list = new ArrayList<CategoryDto>();
-		for (CategoryEntity categoryEntity : categorEntityOptional) {
-			for (ProductEntity productEntity : productOptional) {
-				if (categoryEntity.getId() != categoryEntity.getCategoryParent().getId()) {
-					if (categoryEntity.getId() != productEntity.getCategoryId().getId()) {
-						CategoryDto categoryDto = new CategoryDto();
-						categoryDto.setId(categoryEntity.getId());
-						categoryDto.setCategoryParentId(categoryEntity.getCategoryParent().getId());
-						categoryDto.setDescription(categoryEntity.getDescription());
-					}
-				}
-			}
-		}
-
+		
+		
 		return list;
 	}
 

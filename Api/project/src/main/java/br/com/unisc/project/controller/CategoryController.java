@@ -22,6 +22,16 @@ import br.com.unisc.project.service.CategoryService;
 public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
+	
+	@GetMapping("/product")
+	public List<CategoryDto> findAllCategoriesForProductAdd(){
+		return categoryService.findAllCategoriesForProductAdd();
+	}
+	
+	@GetMapping("/produt/edit")
+	public List<CategoryDto> findAllCategoriesForProductEdit(){
+		return categoryService.findAllCategoriesForProductEdit();
+	}
 
 	@GetMapping(value = "/{name}")
 	public CategoryDto findByName(@PathVariable String name) {
@@ -29,7 +39,7 @@ public class CategoryController {
 	}
 	
 	@GetMapping(value = "/id/{id}")
-	public CategoryDto findById(@PathVariable(value = "id") Long id) {
+	public CategoryDto findById(@PathVariable Long id) {
 		return categoryService.findCategoryById(id);
 	}
 	
@@ -48,8 +58,9 @@ public class CategoryController {
 		return categoryService.findChildrenById(id);
 	}
 	
-	public List<CategoryDto> findCategory() {
-		return categoryService.findCategory();
+	@GetMapping("/addAndEdit")
+	public List<CategoryDto> findCategoryParentAddAndEdit() {
+		return categoryService.findCategoryParentAddAndEdit();
 	}
 
 	@PostMapping
@@ -66,6 +77,4 @@ public class CategoryController {
 	public CategoryDto delete(@PathVariable Long id) {
 		return categoryService.delete(id);
 	}
-
 }
-

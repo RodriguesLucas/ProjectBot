@@ -30,7 +30,7 @@ public class Session implements Runnable {
 	private final int maxSeconds = 180;
 	private final String greeting = "Olá";
 	private int interactionStage;
-	private static final String URlBase = "http://localhost:8090/";
+	private static final String URlBase = "http://localhost:8080/";
 	private CategoryDto[] categories = null;
 	private CategoryDto[] children = null;
 	private ProductDto[] products = null;
@@ -106,7 +106,6 @@ public class Session implements Runnable {
 					break;
 				}
 			} catch (TelegramApiException e) {
-
 			}
 			if (!exit)
 				update = updateQueue.poll();
@@ -312,7 +311,7 @@ public class Session implements Runnable {
 		ByteArrayInputStream stream;
 		if (chosenProduct.getPhoto() != null) {
 			stream = new ByteArrayInputStream(chosenProduct.getPhoto());
-			bot.sendPhoto(id, new InputFile(stream, ""));
+			bot.sendPhoto(id, new InputFile(stream, id));
 		}
 		bot.sendMessage(id, "Informações técnicas: " + chosenProduct.getInfoTec());
 		bot.sendMessage(id, "Você pode pagar R$ 50,00 para obter garantia de 1 mês.");

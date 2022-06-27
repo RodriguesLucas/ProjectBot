@@ -21,6 +21,7 @@ public class CategoryViewService {
 		RestTemplate restTemplate = new RestTemplate();
 		CategoryDto[] categoryDtos = restTemplate.getForObject(uri, CategoryDto[].class);
 		comboBoxCategoryParentAdd.removeAllItems();
+		comboBoxCategoryParentAdd.addItem("Sem categoria");
 		for (CategoryDto categoryDto : categoryDtos) {
 			comboBoxCategoryParentAdd.addItem(categoryDto.getDescription());
 		}
@@ -38,10 +39,9 @@ public class CategoryViewService {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-
 		CategoryDto dto = new CategoryDto();
-		if (comboBoxCategoryParentAdd.getSelectedItem() != null) {
-			// Busca por nome a categoria no banco
+		if (comboBoxCategoryParentAdd.getSelectedItem() != null
+				&& !comboBoxCategoryParentAdd.getSelectedItem().equals("Sem categoria")) {
 			CategoryDto categoryDto = findCategoryByName(comboBoxCategoryParentAdd.getSelectedItem().toString());
 			dto.setDescription(textFieldDescriptionAdd.getText());
 			dto.setCategoryParentId(categoryDto.getId());
@@ -70,7 +70,7 @@ public class CategoryViewService {
 		CategoryDto[] categoryDto = restTemplate.getForObject(uri, CategoryDto[].class);
 		return categoryDto;
 	}
-	
+
 	public CategoryDto[] findCategoryParentDel() {
 		String uri = URlBase.concat("/");
 		RestTemplate restTemplate = new RestTemplate();
@@ -96,6 +96,7 @@ public class CategoryViewService {
 	public void setComboBoxCategoryParentEdit(JComboBox comboBoxCategoryParentEdit) {
 		CategoryDto[] categoryDtos = findCategoryParent();
 		comboBoxCategoryParentEdit.removeAllItems();
+		comboBoxCategoryParentEdit.addItem("Sem categoria");
 		for (CategoryDto categoryDto : categoryDtos) {
 			comboBoxCategoryParentEdit.addItem(categoryDto.getDescription());
 		}
@@ -103,22 +104,31 @@ public class CategoryViewService {
 
 	public void putCategory(JComboBox comboBoxCategoryParentEdit, JComboBox comboBoxCategoryEdit,
 			JTextField textFieldNewDescriptionEdit) {
-		CategoryDto dto = findCategoryByName(comboBoxCategoryEdit.getSelectedItem().toString());
-		CategoryDto categoryParentDto = findCategoryByName(comboBoxCategoryParentEdit.getSelectedItem().toString());
-		CategoryDto categoryDto = new CategoryDto();
-		categoryDto.setDescription(textFieldNewDescriptionEdit.getText());
-		categoryDto.setCategoryParentId(categoryParentDto.getId());
+		if (comboBoxCategoryParentEdit.getSelectedItem().toString()
+				.equals(comboBoxCategoryEdit.getSelectedItem().toString())) {
+			CategoryDto categoryDto = new CategoryDto();
+			if (!comboBoxCategoryParentEdit.getSelectedItem().toString().equals("Sem categoria")) {
+				CategoryDto categoryParentDto = findCategoryByName(
+						comboBoxCategoryParentEdit.getSelectedItem().toString());
+				categoryDto.setCategoryParentId(categoryParentDto.getId());
+			} else {
+				categoryDto.setCategoryParentId(null);
+			}
+			categoryDto.setDescription(textFieldNewDescriptionEdit.getText());
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		URI uri = null;
-		try {
-			uri = new URI(URlBase.concat("/") + dto.getId());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			CategoryDto dto = findCategoryByName(comboBoxCategoryEdit.getSelectedItem().toString());
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			URI uri = null;
+			try {
+				uri = new URI(URlBase.concat("/") + dto.getId());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.put(uri, categoryDto);
 		}
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.put(uri, categoryDto);
+		throw new RuntimeException("Categoria pai não pode ser o mesmo da categoria!");
 	}
 
 	public void setComboBoxCategoryDelete(JComboBox comboBoxCategoryDelete) {
@@ -131,7 +141,7 @@ public class CategoryViewService {
 
 	public void delete(JComboBox comboBoxCategoryDelete) {
 		CategoryDto dto = findCategoryByName(comboBoxCategoryDelete.getSelectedItem().toString());
-		String uri = URlBase.concat("/"+ dto.getId());
+		String uri = URlBase.concat("/" + dto.getId());
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.delete(uri);
 	}

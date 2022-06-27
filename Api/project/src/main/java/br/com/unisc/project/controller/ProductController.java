@@ -25,6 +25,11 @@ public class ProductController {
 	public List<ProductDto> findProductsByCategoryId(@PathVariable Long id) {
 		return productService.findProductsByCategoryId(id);
 	}
+	
+	@GetMapping("/{id}")
+	public ProductDto findByProductById(@PathVariable Long id) {
+		return productService.findByProductById(id);
+	}
 
 	@PostMapping
 	public ProductDto insertProduct(@RequestBody ProductDto productDto) {

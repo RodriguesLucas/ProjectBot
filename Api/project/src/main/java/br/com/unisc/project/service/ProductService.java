@@ -21,12 +21,18 @@ public class ProductService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-	@Transactional
+	
 	public List<ProductDto> findProductsByCategoryId(Long id) {
 		List<ProductEntity> products = productRepository.findAllByCategoryId(id);
 		return products.stream().map(ProductDto::new).collect(Collectors.toList());
 	}
 	
+	@Transactional
+	public ProductDto findByProductById(Long id) {
+		ProductEntity products = productRepository.findByProductById(id);
+		return new ProductDto(products);
+	}
+
 	@Transactional
 	public ProductDto insertProduct(ProductDto productDto) {
 		ProductEntity productEntity = new ProductEntity();
@@ -63,4 +69,5 @@ public class ProductService {
 		
 	}
 
+	
 }

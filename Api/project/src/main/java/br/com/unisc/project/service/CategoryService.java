@@ -26,12 +26,12 @@ public class CategoryService {
 		List<CategoryEntity> findAllCategoriesForProductAdd = categoryRepository.findAllCategoriesForProductAdd();
 		return findAllCategoriesForProductAdd.stream().map(CategoryDto::new).collect(Collectors.toList());
 	}
-	
+
 	public List<CategoryDto> findAllCategoriesForProductEdit() {
 		List<CategoryEntity> findAllCategoriesForProductAdd = categoryRepository.findAllCategoriesForProductEdit();
 		return findAllCategoriesForProductAdd.stream().map(CategoryDto::new).collect(Collectors.toList());
 	}
-	
+
 	public List<CategoryDto> findChildrenById(Long id) {
 		return categoryRepository.findAllByParentId(id);
 	}
@@ -100,9 +100,27 @@ public class CategoryService {
 
 	@Transactional
 	public CategoryDto put(CategoryDto categoryDto, Long id) {
-		Optional<CategoryEntity> categoryParentOptional = categoryRepository
-				.findById(categoryDto.getCategoryParentId());
-		if (categoryParentOptional.isPresent()) {
+		if (categoryDto.getCategoryParentId() != null) {
+			Optional<CategoryEntity> categoryParentOptional = categoryRepository
+					.findById(categoryDto.getCategoryParentId());
+			if (categoryParentOptional.isPresent()) {
+				Optional<ProductEntity> productCategoryOptional = productRepository.findByCategoryEntityId(id);
+				if (!productCategoryOptional.isPresent()) {
+					Optional<CategoryEntity> findDescriptionOptional = categoryRepository
+							.findByDescription(categoryDto.getDescription());
+					if (!findDescriptionOptional.isPresent()) {
+						CategoryEntity categoryEntity = new CategoryEntity();
+						categoryEntity.setId(id);
+						categoryEntity.setDescription(categoryDto.getDescription());
+						categoryEntity.setCategoryParent(categoryParentOptional.get());
+						return new CategoryDto(categoryRepository.save(categoryEntity));
+					}
+					throw new RuntimeException("Nome já existe no banco!");
+				}
+				throw new RuntimeException("Categoria ligado a um produto!");
+			}
+			throw new RuntimeException("Essa categoria está vinculada a filhos!");
+		} else {
 			Optional<ProductEntity> productCategoryOptional = productRepository.findByCategoryEntityId(id);
 			if (!productCategoryOptional.isPresent()) {
 				Optional<CategoryEntity> findDescriptionOptional = categoryRepository
@@ -111,22 +129,22 @@ public class CategoryService {
 					CategoryEntity categoryEntity = new CategoryEntity();
 					categoryEntity.setId(id);
 					categoryEntity.setDescription(categoryDto.getDescription());
-					categoryEntity.setCategoryParent(categoryParentOptional.get());
+					categoryEntity.setCategoryParent(null);
 					return new CategoryDto(categoryRepository.save(categoryEntity));
 				}
 				throw new RuntimeException("Nome já existe no banco!");
 			}
 			throw new RuntimeException("Categoria ligado a um produto!");
 		}
-		throw new RuntimeException("Essa categoria está vinculada a filhos!");
+
 	}
 
 	public CategoryDto delete(Long id) {
-			Optional<CategoryEntity> category = categoryRepository.findById(id);
-			if (category.isPresent()) {
-				categoryRepository.deleteById(id);
-				return new CategoryDto(category.get());
-			}
-			return new CategoryDto();
+		Optional<CategoryEntity> category = categoryRepository.findById(id);
+		if (category.isPresent()) {
+			categoryRepository.deleteById(id);
+			return new CategoryDto(category.get());
 		}
+		return new CategoryDto();
 	}
+}

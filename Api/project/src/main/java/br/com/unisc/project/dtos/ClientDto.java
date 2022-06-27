@@ -4,34 +4,38 @@ import br.com.unisc.project.entities.ClientEntity;
 
 public class ClientDto {
 
-	private String cpf_cnpj;
+	private Long chatId;
+	
+	private String cpfCnpj;
 
 	private String name;
 
-	private String phone;
+	private String phoneNumber;
 
 	public ClientDto() {
 
 	}
 
 	public ClientDto(ClientEntity clientEntity) {
-		this.cpf_cnpj = clientEntity.getCpf_cnpj();
+		this.chatId = clientEntity.getId();
+		this.cpfCnpj = clientEntity.getCpf_cnpj();
 		this.name = clientEntity.getName();
-		this.phone = clientEntity.getPhone();
+		this.phoneNumber = clientEntity.getPhone();
 	}
 
-	public ClientDto(String cpf_cnpj, String name, String phone) {
-		this.cpf_cnpj = cpf_cnpj;
+	public ClientDto(Long chatId, String cpf_cnpj, String name, String phone) {
+		this.chatId = chatId;
+		this.cpfCnpj = cpf_cnpj;
 		this.name = name;
-		this.phone = phone;
+		this.phoneNumber = phone;
 	}
 
-	public String getCpf_cnpj() {
-		return cpf_cnpj;
+	public String getCpfCnpj() {
+		return cpfCnpj;
 	}
 
-	public void setCpf_cnpj(String cpf_cnpj) {
-		this.cpf_cnpj = cpf_cnpj;
+	public void setCpfCnpj(String cpf_cnpj) {
+		this.cpfCnpj = cpf_cnpj;
 	}
 
 	public String getName() {
@@ -42,11 +46,19 @@ public class ClientDto {
 		this.name = name;
 	}
 
-	public String getPhone() {
-		return phone;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setPhoneNumber(String phone) {
+		this.phoneNumber = phone;
+	}
+
+	public Long getChatId() {
+		return chatId;
+	}
+
+	public void setChatId(Long chatId) {
+		this.chatId = chatId;
 	}
 }

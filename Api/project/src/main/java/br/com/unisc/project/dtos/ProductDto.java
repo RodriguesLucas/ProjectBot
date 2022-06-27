@@ -14,7 +14,6 @@ public class ProductDto {
 	private String infoTec;
 
 	private byte[] photo;
-	
 	private Long categoryId;
 
 	public ProductDto() {

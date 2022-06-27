@@ -26,8 +26,10 @@ public class ClientService {
 	@Transactional
 	public ClientDto findClientById(Long chatId) {
 		Optional<ClientEntity> clientOptional = clientRepository.findById(chatId);
-		if(clientOptional.isPresent())
+		if(clientOptional.isPresent()) {
 			return new ClientDto(clientOptional.get());
+			
+		}
 		else
 			return null;
 	}
@@ -38,9 +40,9 @@ public class ClientService {
 		if(clientOptional.isEmpty()) {
 			ClientEntity clientEntity = new ClientEntity();
 			clientEntity.setId(chatId);
-			clientEntity.setCpf_cnpj(clientDto.getCpf_cnpj());
+			clientEntity.setCpf_cnpj(clientDto.getCpfCnpj());
 			clientEntity.setName(clientDto.getName());
-			clientEntity.setPhone(clientDto.getPhone());
+			clientEntity.setPhone(clientDto.getPhoneNumber());
 			return new ClientDto(clientRepository.save(clientEntity));
 		}
 		throw new RuntimeException("Cliente já existe!");

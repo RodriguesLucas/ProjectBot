@@ -6,11 +6,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
+
+import br.com.unisc.project.controller.ProductViewController;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import javax.swing.GroupLayout;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -19,7 +25,7 @@ import javax.swing.JFormattedTextField;
 //Classe da janela de gestão de categorias
 public class ProductView extends JFrame {
 	private static final long serialVersionUID = 1L;
-	
+
 	// Componentes necessários
 	private JPanel panelMain;
 	private JTabbedPane tabbedPaneMain;
@@ -60,6 +66,8 @@ public class ProductView extends JFrame {
 	private JComboBox comboBoxProductCategoryDelete;
 	private JLabel labelProductDelete;
 	private JComboBox comboBoxProductDelete;
+	private ProductViewController productViewController;
+	private byte[] bs;
 
 	// Construtor
 	public ProductView(String name) {
@@ -115,7 +123,8 @@ public class ProductView extends JFrame {
 		comboBoxProductCategoryDelete = new JComboBox();
 		labelProductDelete = new JLabel("Produto:", JLabel.TRAILING);
 		comboBoxProductDelete = new JComboBox();
-
+		productViewController = new ProductViewController();
+		bs = null;
 		setContentPane(panelMain); // Define o painel da janela
 
 		// Coloca borda no tabbedPane
@@ -297,6 +306,34 @@ public class ProductView extends JFrame {
 
 		// Torna a janela visível
 		this.setVisible(true);
-	}
 
+		// seta valores nas comboBox
+		productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
+				comboBoxProductCategoryEdit, comboBoxProductCategoryDelete);
+		// funções dos botões
+		buttonProductImageAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				bs = productViewController.getPhotoByte(ProductView.this);
+			}
+		});
+
+		buttonConfirmAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (bs == null) {
+					buttonProductImageAdd.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							byte[] bt = productViewController.getPhotoByte(ProductView.this);
+						}
+					});
+				}
+				productViewController.addProduct(comboBoxProductCategoryAdd, textFieldProductInfoAdd, textFieldPriceAdd,
+						textFieldDescriptionAdd, bs);
+			}
+		});
+		buttonCancelAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ProductView.this.dispose();
+			}
+		});
+	}
 }

@@ -17,10 +17,10 @@ public class CategoryViewService {
 	private static final String URlBase = "http://localhost:8080/category";
 
 	public void setComboBoxCategoryParentAdd(JComboBox comboBoxCategoryParentAdd) {
-		String uri = URlBase.concat("/");
+		String uri = URlBase.concat("/addAndEdit");
 		RestTemplate restTemplate = new RestTemplate();
 		CategoryDto[] categoryDtos = restTemplate.getForObject(uri, CategoryDto[].class);
-
+		comboBoxCategoryParentAdd.removeAllItems();
 		for (CategoryDto categoryDto : categoryDtos) {
 			comboBoxCategoryParentAdd.addItem(categoryDto.getDescription());
 		}
@@ -65,6 +65,13 @@ public class CategoryViewService {
 	}
 
 	public CategoryDto[] findCategoryParent() {
+		String uri = URlBase.concat("/addAndEdit");
+		RestTemplate restTemplate = new RestTemplate();
+		CategoryDto[] categoryDto = restTemplate.getForObject(uri, CategoryDto[].class);
+		return categoryDto;
+	}
+	
+	public CategoryDto[] findCategoryParentDel() {
 		String uri = URlBase.concat("/");
 		RestTemplate restTemplate = new RestTemplate();
 		CategoryDto[] categoryDto = restTemplate.getForObject(uri, CategoryDto[].class);
@@ -79,7 +86,7 @@ public class CategoryViewService {
 	}
 
 	public void setComboBoxPut(JComboBox comboBoxCategoryEdit) {
-		CategoryDto[] categoryDtos = findAllCategory();
+		CategoryDto[] categoryDtos = findCategoryParent();
 		comboBoxCategoryEdit.removeAllItems();
 		for (CategoryDto categoryDto : categoryDtos) {
 			comboBoxCategoryEdit.addItem(categoryDto.getDescription());
@@ -96,9 +103,7 @@ public class CategoryViewService {
 
 	public void putCategory(JComboBox comboBoxCategoryParentEdit, JComboBox comboBoxCategoryEdit,
 			JTextField textFieldNewDescriptionEdit) {
-
 		CategoryDto dto = findCategoryByName(comboBoxCategoryEdit.getSelectedItem().toString());
-
 		CategoryDto categoryParentDto = findCategoryByName(comboBoxCategoryParentEdit.getSelectedItem().toString());
 		CategoryDto categoryDto = new CategoryDto();
 		categoryDto.setDescription(textFieldNewDescriptionEdit.getText());
@@ -117,11 +122,17 @@ public class CategoryViewService {
 	}
 
 	public void setComboBoxCategoryDelete(JComboBox comboBoxCategoryDelete) {
-		CategoryDto[] categoryDtos = findCategoryParent();
+		CategoryDto[] categoryDtos = findCategoryParentDel();
 		comboBoxCategoryDelete.removeAllItems();
 		for (CategoryDto categoryDto : categoryDtos) {
 			comboBoxCategoryDelete.addItem(categoryDto.getDescription());
 		}
+	}
 
+	public void delete(JComboBox comboBoxCategoryDelete) {
+		CategoryDto dto = findCategoryByName(comboBoxCategoryDelete.getSelectedItem().toString());
+		String uri = URlBase.concat("/"+ dto.getId());
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.delete(uri);
 	}
 }

@@ -2,8 +2,6 @@ package br.com.unisc.project.dtos;
 
 import java.math.BigDecimal;
 
-import br.com.unisc.project.entities.ProductEntity;
-
 public class ProductDto {
 	private Long id;
 
@@ -27,15 +25,6 @@ public class ProductDto {
 		this.infoTec = infoTec;
 		this.photo = photo;
 		this.categoryId = categoryId;
-	}
-
-	public ProductDto(ProductEntity entity) {
-		this.setId(entity.getId());
-		this.setDescription(entity.getDescription());
-		this.setPrice(entity.getPrice());
-		this.setInfoTec(entity.getInfoTec());
-		this.setPhoto(entity.getPhoto());
-		this.setCategoryEntity(entity.getCategoryId().getId());
 	}
 
 	public Long getId() {
@@ -85,7 +74,6 @@ public class ProductDto {
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
-	
 	
 
 }

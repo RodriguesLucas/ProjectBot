@@ -2,6 +2,7 @@ package br.com.unisc.project.service;
 
 import java.util.ArrayList;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -40,7 +41,7 @@ public class ProductQueryBotService extends TelegramLongPollingBot implements Ca
 		}
 		
 		 
-		  
+		 
 		  /*System.out.println(Date.from(Instant.ofEpochSecond(update.getMessage().
 		 * getDate())).toString()); String message =
 		 *update.getMessage().getText().toLowerCase(); //String chatId =

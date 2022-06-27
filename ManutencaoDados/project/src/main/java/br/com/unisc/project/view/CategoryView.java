@@ -220,31 +220,35 @@ public class CategoryView extends JFrame {
 		// Torna a janela visível
 		this.setVisible(true);
 
-		// preenche a combo Box
-		categoryViewController.setComboBoxCategoryParentAdd(comboBoxCategoryParentAdd);
-		categoryViewController.setComboBoxPut(comboBoxCategoryEdit);
-		categoryViewController.setComboBoxCategoryParentEdit(comboBoxCategoryParentEdit);
-		categoryViewController.setComboBoxCategoryDelete(comboBoxCategoryDelete);
+		// preenche as combo Box
+		categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit,comboBoxCategoryDelete, comboBoxCategoryParentEdit);
+		
 
 		// açoes dos botoes
 		buttonConfirmAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				categoryViewController.createdNewCategory(textFieldDescriptionAdd, comboBoxCategoryParentAdd);
-				categoryViewController.setComboBoxPut(comboBoxCategoryEdit);
-				categoryViewController.setComboBoxCategoryParentEdit(comboBoxCategoryParentEdit);
+				categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit,comboBoxCategoryDelete, comboBoxCategoryParentEdit);				
+			}
+		});
+		
+		buttonConfirmDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				categoryViewController.delete(comboBoxCategoryDelete);
+				categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit,comboBoxCategoryDelete, comboBoxCategoryParentEdit);	
 			}
 		});
 
 		buttonCancelAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				CategoryView.this.dispose();
 			}
 		});
 
 		buttonConfirmEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				categoryViewController.putCategory(comboBoxCategoryParentEdit, comboBoxCategoryEdit, textFieldNewDescriptionEdit);
-				CategoryView.this.dispose();
+				categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit,comboBoxCategoryDelete, comboBoxCategoryParentEdit);	
 			}
 		});
 

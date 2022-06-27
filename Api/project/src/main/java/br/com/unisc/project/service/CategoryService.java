@@ -1,6 +1,5 @@
 package br.com.unisc.project.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,13 +22,16 @@ public class CategoryService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	// Nome não pode ser igual e verificar se a categoria não é a mesma que querem
-	// inserir
-	@Transactional
-	public List<CategoryDto> findCategory() {
-		return null;
+	public List<CategoryDto> findAllCategoriesForProductAdd() {
+		List<CategoryEntity> findAllCategoriesForProductAdd = categoryRepository.findAllCategoriesForProductAdd();
+		return findAllCategoriesForProductAdd.stream().map(CategoryDto::new).collect(Collectors.toList());
 	}
-
+	
+	public List<CategoryDto> findAllCategoriesForProductEdit() {
+		List<CategoryEntity> findAllCategoriesForProductAdd = categoryRepository.findAllCategoriesForProductEdit();
+		return findAllCategoriesForProductAdd.stream().map(CategoryDto::new).collect(Collectors.toList());
+	}
+	
 	public List<CategoryDto> findChildrenById(Long id) {
 		return categoryRepository.findAllByParentId(id);
 	}
@@ -44,16 +46,16 @@ public class CategoryService {
 		return new CategoryDto(findById.get());
 	}
 
-	// Se tiver produto cadastrado com esse id não pode
-	// SE ela for pai também não pode
 	@Transactional
 	public List<CategoryDto> findCategoryParent() {
-		List<CategoryEntity> categorEntityOptional = categoryRepository.findAll();
-		List<ProductEntity> productOptional = productRepository.findAll();
-		List<CategoryDto> list = new ArrayList<CategoryDto>();
-		
-		
-		return list;
+		List<CategoryEntity> categorEntityOptional = categoryRepository.findAllCategoryParent();
+		return categorEntityOptional.stream().map(CategoryDto::new).collect(Collectors.toList());
+	}
+
+	@Transactional
+	public List<CategoryDto> findCategoryParentAddAndEdit() {
+		List<CategoryEntity> categorEntityOptional = categoryRepository.findCategoryParendAddAndEdit();
+		return categorEntityOptional.stream().map(CategoryDto::new).collect(Collectors.toList());
 	}
 
 	@Transactional
@@ -120,16 +122,12 @@ public class CategoryService {
 	}
 
 	public CategoryDto delete(Long id) {
-		Optional<ProductEntity> productCategoryOptional = productRepository.findByCategoryEntityId(id);
-		if (!productCategoryOptional.isPresent()) {
 			Optional<CategoryEntity> category = categoryRepository.findById(id);
-			if (!category.isPresent()) {
+			if (category.isPresent()) {
 				categoryRepository.deleteById(id);
 				return new CategoryDto(category.get());
 			}
-			throw new RuntimeException("Essa categoria está vinculada a filhos!");
+			return new CategoryDto();
 		}
-		throw new RuntimeException("Categoria ligado a um produto!");
 	}
 
-}

@@ -21,6 +21,7 @@ public class ProductQueryBotService extends TelegramLongPollingBot implements Ca
 	// Método chamado quando o bot recebe mensagens
 	@Override
 	public void onUpdateReceived(Update update) {
+		
 		System.out.println("gfghfhfhgfghf");
 		long chatId = update.getMessage().getChatId();
 		boolean hasActiveSession = false;
@@ -39,9 +40,7 @@ public class ProductQueryBotService extends TelegramLongPollingBot implements Ca
 			s.sendUpdate(update);
 			s.createThread();
 		}
-		
-		 
-		 
+				  
 		  /*System.out.println(Date.from(Instant.ofEpochSecond(update.getMessage().
 		 * getDate())).toString()); String message =
 		 *update.getMessage().getText().toLowerCase(); //String chatId =
@@ -87,6 +86,7 @@ public class ProductQueryBotService extends TelegramLongPollingBot implements Ca
 	public void callback(Object o) {
 		Session s = (Session) o;
 		activeSessions.remove(s);
+		System.out.println("removeu " + s.getChatId());
 	}
 	
 	// Método para enviar mensagens
@@ -96,7 +96,6 @@ public class ProductQueryBotService extends TelegramLongPollingBot implements Ca
 	
 	// Método para enviar imagens
 	public Message sendPhoto(String chatId, InputFile photo) throws TelegramApiException {
-		return execute(SendPhoto.builder().chatId(chatId).photo(photo).build());
+		return execute(SendPhoto.builder().chatId(chatId).photo(photo).build());		
 	}
-
 }

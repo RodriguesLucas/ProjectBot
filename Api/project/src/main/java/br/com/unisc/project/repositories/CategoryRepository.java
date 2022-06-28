@@ -25,7 +25,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long>{
 	@Query(value = "select * from category c where c.category_parent_id=:id", nativeQuery = true)
 	List<CategoryDto> findAllByParentId(Long id);
 
-	@Query(value = "select * from category c where c.id not in (select category_parent_id from category cp where cp.category_parent_id!=null) and c.id not in (select category_id from product)", nativeQuery = true)
+	@Query(value = "select * from category c where c.id not in (select category_parent_id from category cp where cp.category_parent_id is not null) and c.id not in (select category_id from product)", nativeQuery = true)
 	List<CategoryEntity> findAllCategoryParent();
 
 	@Query(value = "select * from category c where c.id not in (select category_id from product)", nativeQuery = true)

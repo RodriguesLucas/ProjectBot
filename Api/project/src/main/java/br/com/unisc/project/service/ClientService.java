@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.unisc.project.dtos.ClientDto;
+import br.com.unisc.project.dtos.ClienteAllDto;
 import br.com.unisc.project.entities.ClientEntity;
 import br.com.unisc.project.repositories.ClienteRepository;
 
@@ -46,5 +47,12 @@ public class ClientService {
 			return new ClientDto(clientRepository.save(clientEntity));
 		}
 		throw new RuntimeException("Cliente já existe!");
+	}
+
+	public List<ClienteAllDto> findClientAllDto() {
+		
+		
+		List<ClienteAllDto> allDtos = clientRepository.findClientAllDto();
+		return allDtos;
 	}
 }

@@ -68,6 +68,7 @@ public class ProductQueryBotService extends TelegramLongPollingBot implements Ca
 		return execute(SendPhoto.builder().chatId(chatId).photo(photo).build());
 	}
 
+	// Método para checar se há atualizações para uma dada sessão
 	public synchronized Update checkUpdates(long chatId) {
 		for (Update u : updateList)
 			if (u.getMessage().getChatId() == chatId) {

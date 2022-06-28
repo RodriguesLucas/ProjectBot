@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import br.com.unisc.project.dtos.CategoryDto;
 import br.com.unisc.project.entities.CategoryEntity;
 
 
@@ -23,9 +22,9 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long>{
 	Optional<CategoryEntity> findById(@Param("id") Long id);
 
 	@Query(value = "select * from category c where c.category_parent_id=:id", nativeQuery = true)
-	List<CategoryDto> findAllByParentId(Long id);
+	List<CategoryEntity> findAllByParentId(Long id);
 
-	@Query(value = "select * from category c where c.id not in (select category_parent_id from category cp where cp.category_parent_id!=null) and c.id not in (select category_id from product)", nativeQuery = true)
+	@Query(value = "select * from category c where c.id not in (select category_parent_id from category cp where cp.category_parent_id is not null) and c.id not in (select category_id from product)", nativeQuery = true)
 	List<CategoryEntity> findAllCategoryParent();
 
 	@Query(value = "select * from category c where c.id not in (select category_id from product)", nativeQuery = true)

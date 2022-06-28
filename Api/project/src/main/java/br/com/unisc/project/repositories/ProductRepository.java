@@ -11,7 +11,6 @@ import br.com.unisc.project.entities.ProductEntity;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Long>{
 	Optional<ProductEntity> findByCategoryEntityId(Long id);
-	
 	@Query(value = "select * from product p where p.category_id =:id", nativeQuery = true)
 	List<ProductEntity> findAllByCategoryId(Long id);
 

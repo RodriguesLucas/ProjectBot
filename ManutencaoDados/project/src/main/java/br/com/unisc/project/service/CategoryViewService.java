@@ -104,31 +104,36 @@ public class CategoryViewService {
 
 	public void putCategory(JComboBox comboBoxCategoryParentEdit, JComboBox comboBoxCategoryEdit,
 			JTextField textFieldNewDescriptionEdit) {
-		if (comboBoxCategoryParentEdit.getSelectedItem().toString()
-				.equals(comboBoxCategoryEdit.getSelectedItem().toString())) {
-			CategoryDto categoryDto = new CategoryDto();
-			if (!comboBoxCategoryParentEdit.getSelectedItem().toString().equals("Sem categoria")) {
-				CategoryDto categoryParentDto = findCategoryByName(
-						comboBoxCategoryParentEdit.getSelectedItem().toString());
-				categoryDto.setCategoryParentId(categoryParentDto.getId());
-			} else {
-				categoryDto.setCategoryParentId(null);
-			}
-			categoryDto.setDescription(textFieldNewDescriptionEdit.getText());
+		if (comboBoxCategoryEdit.getSelectedItem() != null) {
+			if (!comboBoxCategoryParentEdit.getSelectedItem().toString()
+					.equals(comboBoxCategoryEdit.getSelectedItem().toString())) {
+				CategoryDto categoryDto = new CategoryDto();
+				if (!comboBoxCategoryParentEdit.getSelectedItem().toString().equals("Sem categoria")) {
+					CategoryDto categoryParentDto = findCategoryByName(
+							comboBoxCategoryParentEdit.getSelectedItem().toString());
+					categoryDto.setCategoryParentId(categoryParentDto.getId());
+				} else {
+					categoryDto.setCategoryParentId(null);
+				}
+				categoryDto.setDescription(textFieldNewDescriptionEdit.getText());
 
-			CategoryDto dto = findCategoryByName(comboBoxCategoryEdit.getSelectedItem().toString());
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			URI uri = null;
-			try {
-				uri = new URI(URlBase.concat("/") + dto.getId());
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
+				CategoryDto dto = findCategoryByName(comboBoxCategoryEdit.getSelectedItem().toString());
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.APPLICATION_JSON);
+				URI uri = null;
+				try {
+					uri = new URI(URlBase.concat("/") + dto.getId());
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+				RestTemplate restTemplate = new RestTemplate();
+				restTemplate.put(uri, categoryDto);
+			} else {
+				throw new RuntimeException("Categoria pai não pode ser o mesmo da categoria!");
 			}
-			RestTemplate restTemplate = new RestTemplate();
-			restTemplate.put(uri, categoryDto);
+		} else {
+			throw new RuntimeException("Nenhuma categoria selecionada!");
 		}
-		throw new RuntimeException("Categoria pai não pode ser o mesmo da categoria!");
 	}
 
 	public void setComboBoxCategoryDelete(JComboBox comboBoxCategoryDelete) {
@@ -140,9 +145,13 @@ public class CategoryViewService {
 	}
 
 	public void delete(JComboBox comboBoxCategoryDelete) {
-		CategoryDto dto = findCategoryByName(comboBoxCategoryDelete.getSelectedItem().toString());
-		String uri = URlBase.concat("/" + dto.getId());
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.delete(uri);
+		if (comboBoxCategoryDelete.getSelectedItem() != null) {
+			CategoryDto dto = findCategoryByName(comboBoxCategoryDelete.getSelectedItem().toString());
+			String uri = URlBase.concat("/" + dto.getId());
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.delete(uri);
+		} else {
+			throw new RuntimeException("Nenhuca categoria selecionada para excluir!");
+		}
 	}
 }

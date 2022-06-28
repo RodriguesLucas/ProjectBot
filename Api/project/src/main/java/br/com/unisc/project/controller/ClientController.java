@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.unisc.project.dtos.ClientDto;
+import br.com.unisc.project.dtos.ClientAllInfoDto;
 import br.com.unisc.project.service.ClientService;
 
 @RestController
@@ -19,9 +20,14 @@ public class ClientController {
 	@Autowired
 	private ClientService clientService;
 
-	@GetMapping()
+	@GetMapping
 	public List<ClientDto> findAll(){
 		return clientService.findAll();
+	}
+	
+	@GetMapping("/allInfo")
+	public List<ClientAllInfoDto> clienteAllDtos(){
+		return clientService.findClientAllDto();
 	}
 	
 	@GetMapping(value = "/id/{id}")
@@ -34,3 +40,4 @@ public class ClientController {
 		return clientService.add(clientDto, chatId);
 	}
 }
+

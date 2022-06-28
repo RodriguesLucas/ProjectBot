@@ -2,8 +2,6 @@ package br.com.unisc.project.service;
 
 import java.io.ByteArrayInputStream;
 import java.time.Instant;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +22,6 @@ public class Session implements Runnable {
 	// Atributos
 	private long chatId;
 	private Thread thread;
-	private Queue<Update> updateQueue;
 	private Callback cb;
 	private ProductQueryBotService bot;
 	private final int maxSeconds = 180;
@@ -44,16 +41,10 @@ public class Session implements Runnable {
 
 	// Construtor
 	public Session(long chatId, Callback cb, ProductQueryBotService bot) {
-		this.updateQueue = new LinkedList<>();
 		this.chatId = chatId;
 		this.cb = cb;
 		this.bot = bot;
 		this.interactionStage = 1;
-	}
-
-	// Função que recebe as mensagens da sessão atual
-	public void sendUpdate(Update update) {
-		updateQueue.add(update);
 	}
 
 	// Cria thread para a sessão
@@ -65,16 +56,20 @@ public class Session implements Runnable {
 	// Controla o fluxo da sessão
 	@Override
 	public void run() {
-		Update update = updateQueue.poll();
-		Instant lastUpdate = Instant.ofEpochSecond(update.getMessage().getDate());
+		Update update = bot.checkUpdates(chatId);
+
+		Instant lastUpdate = null;
 
 		exit = false;
 
-		while (Instant.now().minusSeconds(lastUpdate.getEpochSecond()).getEpochSecond() < maxSeconds && !exit) {
+		do {
 			if (update == null) {
-				update = updateQueue.poll();
+				update = bot.checkUpdates(chatId);
+				if (update == null && lastUpdate == null)
+					lastUpdate = Instant.now();
 				continue;
 			}
+			lastUpdate = Instant.ofEpochSecond(update.getMessage().getDate());
 			m = update.getMessage();
 			try {
 				switch (interactionStage) {
@@ -108,11 +103,13 @@ public class Session implements Runnable {
 			} catch (TelegramApiException e) {
 			}
 			if (!exit)
-				update = updateQueue.poll();
-		}
+				update = bot.checkUpdates(chatId);
+
+		} while (Instant.now().minusSeconds(lastUpdate.getEpochSecond()).getEpochSecond() < maxSeconds && !exit);
 		if (!exit) {
 			try {
-				bot.sendMessage(String.valueOf(chatId), "Tempo de resposta esgotado. Recomecemos do início.");
+				bot.sendMessage(String.valueOf(chatId),
+						"Tempo de resposta esgotado. Recomece o diálogo do início se ainda deseja buscar produtos.");
 			} catch (TelegramApiException e) {
 
 			}

@@ -6,9 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = "client")
-public class ClientEntity implements Serializable {
+public class ClientAllInfoEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -20,14 +21,20 @@ public class ClientEntity implements Serializable {
 
 	private String phone;
 
-	public ClientEntity() {
+	private long numQueries;
+
+	private double priceMean;
+	
+	public ClientAllInfoEntity() {
 
 	}
 
-	public ClientEntity(String cpf_cnpj, String name, String phone) {
+	public ClientAllInfoEntity(String cpf_cnpj, String name, String phone, long numQueries, double priceMean) {
 		this.cpf_cnpj = cpf_cnpj;
 		this.name = name;
 		this.phone = phone;
+		this.numQueries = numQueries;
+		this.priceMean = priceMean;
 	}
 
 	public Long getId() {
@@ -62,4 +69,19 @@ public class ClientEntity implements Serializable {
 		this.phone = phone;
 	}
 
+	public long getNumQueries() {
+		return numQueries;
+	}
+
+	public void setNumQueries(long numQueries) {
+		this.numQueries = numQueries;
+	}
+
+	public double getPriceMean() {
+		return priceMean;
+	}
+
+	public void setPriceMean(double priceMean) {
+		this.priceMean = priceMean;
+	}
 }

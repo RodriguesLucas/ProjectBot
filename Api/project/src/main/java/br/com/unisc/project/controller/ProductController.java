@@ -26,6 +26,11 @@ public class ProductController {
 		return productService.findProductsByCategoryId(id);
 	}
 	
+	@GetMapping("/name{name}")
+	public ProductDto findByProductById(@PathVariable String name) {
+		return productService.findByProductByName(name);
+	}
+	
 	@GetMapping("/{id}")
 	public ProductDto findByProductById(@PathVariable Long id) {
 		return productService.findByProductById(id);

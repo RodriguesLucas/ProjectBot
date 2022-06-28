@@ -31,7 +31,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long>{
 	@Query(value = "select * from category c where c.id not in (select category_id from product)", nativeQuery = true)
 	List<CategoryEntity> findCategoryParendAddAndEdit();
 
-	@Query(value = "select * from category c where c.id not in (select category_parent_id from category)", nativeQuery = true)
+	@Query(value = "select * from category c where c.id not in (select category_parent_id from category c where c.category_parent_id is not null)", nativeQuery = true)
 	List<CategoryEntity> findAllCategoriesForProductAdd();
 
 	@Query(value = "select * from category c where c.id in (select category_id from product)", nativeQuery = true)

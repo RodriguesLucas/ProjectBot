@@ -15,6 +15,8 @@ public class ProductViewController {
 	public void setData(JComboBox comboBoxProductCategoryAdd, JComboBox comboBoxNewProductCategoryEdit,
 			JComboBox comboBoxProductCategoryEdit, JComboBox comboBoxProductCategoryDelete) {
 		productViewService.insertComboBox(comboBoxProductCategoryAdd);
+		productViewService.insertComboBox(comboBoxNewProductCategoryEdit);
+		productViewService.insertComboBoxProductCategoryEdit(comboBoxProductCategoryEdit);
 	}
 
 	public byte[] getPhotoByte(ProductView productView) {
@@ -31,6 +33,20 @@ public class ProductViewController {
 		return productViewService.addProduct(comboBoxProductCategoryAdd, textFieldProductInfoAdd, textFieldPriceAdd,
 				textFieldDescriptionAdd, bs);
 
+	}
+
+	public void setComboBoxNewProductCategoryEdit(JComboBox comboBoxProductCategoryEdit,
+			JComboBox comboBoxNewProductCategoryEdit) {
+
+		productViewService.setComboBoxNewProductCategoryEdit(comboBoxProductCategoryEdit,
+				comboBoxNewProductCategoryEdit);
+	}
+
+	public void editProduct(byte[] bs, JComboBox comboBoxDescriptionEdit, JTextField textFieldNewDescriptionEdit,
+			JComboBox comboBoxNewProductCategoryEdit, JTextField textFieldPriceEdit,
+			JTextField textFieldProductInfoEdit) {
+		productViewService.editProduct(bs, comboBoxDescriptionEdit, textFieldNewDescriptionEdit,
+				comboBoxNewProductCategoryEdit, textFieldPriceEdit, textFieldProductInfoEdit);
 	}
 
 }

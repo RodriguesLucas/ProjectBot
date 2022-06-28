@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import br.com.unisc.project.dtos.CategoryDto;
+import br.com.unisc.project.entities.CategoryEntity;
 import br.com.unisc.project.service.CategoryService;
 
 @RestController
@@ -78,3 +79,4 @@ public class CategoryController {
 		return categoryService.delete(id);
 	}
 }
+

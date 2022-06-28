@@ -21,16 +21,12 @@ public class ProductService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-	public ProductDto findByProductByName(String name) {
-		ProductEntity entity = productRepository.findByDescription(name);
-		return new ProductDto(entity);
-	}
-
+	
 	public List<ProductDto> findProductsByCategoryId(Long id) {
 		List<ProductEntity> products = productRepository.findAllByCategoryId(id);
 		return products.stream().map(ProductDto::new).collect(Collectors.toList());
 	}
-
+	
 	@Transactional
 	public ProductDto findByProductById(Long id) {
 		ProductEntity products = productRepository.findByProductById(id);
@@ -62,7 +58,7 @@ public class ProductService {
 		entity.setPrice(productDto.getPrice());
 		return new ProductDto(productRepository.save(entity));
 	}
-
+	
 	public ProductDto delete(Long id) {
 		Optional<ProductEntity> entityOptional = productRepository.findById(id);
 		if (entityOptional.isPresent()) {
@@ -70,7 +66,8 @@ public class ProductService {
 			return new ProductDto(entityOptional.get());
 		}
 		return new ProductDto();
-
+		
 	}
 
+	
 }

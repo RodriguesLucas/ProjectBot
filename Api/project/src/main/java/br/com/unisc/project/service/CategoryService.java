@@ -33,14 +33,14 @@ public class CategoryService {
 	}
 
 	public List<CategoryDto> findChildrenById(Long id) {
-		return categoryRepository.findAllByParentId(id);
+		return categoryRepository.findAllByParentId(id).stream().map(CategoryDto::new).collect(Collectors.toList());
 	}
-
+	
 	public CategoryDto findByNameCategory(String name) {
 		Optional<CategoryEntity> findByDescription = categoryRepository.findByDescription(name);
 		return new CategoryDto(findByDescription.get());
 	}
-
+	
 	public CategoryDto findCategoryById(Long id) {
 		Optional<CategoryEntity> findById = categoryRepository.findById(id);
 		return new CategoryDto(findById.get());

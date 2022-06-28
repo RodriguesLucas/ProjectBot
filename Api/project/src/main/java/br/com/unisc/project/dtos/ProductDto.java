@@ -14,7 +14,6 @@ public class ProductDto {
 	private String infoTec;
 
 	private byte[] photo;
-	
 	private Long categoryId;
 
 	public ProductDto() {
@@ -85,7 +84,5 @@ public class ProductDto {
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
-	
-	
 
 }

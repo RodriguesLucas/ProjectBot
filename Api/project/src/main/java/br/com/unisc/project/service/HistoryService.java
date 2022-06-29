@@ -1,6 +1,8 @@
 package br.com.unisc.project.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,11 @@ public class HistoryService {
 		entity.setProductId(product.get());
 		entity.setInstant(history.getDate());
 		return new HistoryDto(historyRepository.save(entity));
+	}
+
+	public List<HistoryDto> findByClientId(Long id) {
+		List<HistoryEntity> entity = historyRepository.findByClientId(id);
+		return entity.stream().map(HistoryDto::new).collect(Collectors.toList());
 	}
 
 }

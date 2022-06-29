@@ -1,31 +1,28 @@
 package br.com.unisc.project.dtos;
 
 public class ClienteAllDto {
-	private Long chatId;
+	private Long id;
 	private String cpfCnpj;
 	private String name;
 	private String phoneNumber;
 	private long numQueries;
 	private double priceMean;
 
-	public ClienteAllDto() {
-	}
-
-	public ClienteAllDto(Long chatId, String cpfCnpj, String name, String phoneNumber, long numQueries,
-			double priceMean) {
-		this.chatId = chatId;
+	public ClienteAllDto(Long id, String cpfCnpj, String name, String phoneNumber, long numQueries, double priceMean) {
+		this.id = id;
 		this.cpfCnpj = cpfCnpj;
 		this.name = name;
 		this.phoneNumber = phoneNumber;
+		this.numQueries = numQueries;
 		this.priceMean = priceMean;
 	}
 
-	public Long getChatId() {
-		return chatId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setChatId(Long chatId) {
-		this.chatId = chatId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getCpfCnpj() {
@@ -67,4 +64,5 @@ public class ClienteAllDto {
 	public void setPriceMean(double priceMean) {
 		this.priceMean = priceMean;
 	}
+
 }

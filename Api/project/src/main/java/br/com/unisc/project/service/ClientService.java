@@ -1,5 +1,6 @@
 package br.com.unisc.project.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,55 +11,91 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.unisc.project.dtos.ClientDto;
-import br.com.unisc.project.dtos.ClientAllInfoDto;
-import br.com.unisc.project.entities.ClientAllInfoEntity;
+import br.com.unisc.project.dtos.ClienteAllDto;
+import br.com.unisc.project.dtos.HistoryDto;
+import br.com.unisc.project.dtos.ProductDto;
 import br.com.unisc.project.entities.ClientEntity;
-import br.com.unisc.project.repositories.ClienteAllInfoRepository;
+import br.com.unisc.project.entities.HistoryEntity;
+import br.com.unisc.project.entities.ProductEntity;
 import br.com.unisc.project.repositories.ClienteRepository;
+import br.com.unisc.project.repositories.HistoryRepository;
+import br.com.unisc.project.repositories.ProductRepository;
 
 @Service
 public class ClientService {
 
 	@Autowired
 	private ClienteRepository clientRepository;
+
 	@Autowired
-	private ClienteAllInfoRepository clientAllInfoRepository;
-	
+	private HistoryRepository historyRepository;
+
+	@Autowired
+	private ProductRepository productRepository;
+
 	public List<ClientDto> findAll() {
 		List<ClientEntity> entities = clientRepository.findAll();
 		return entities.stream().map(ClientDto::new).collect(Collectors.toList());
 	}
-	
+
 	@Transactional
 	public ClientDto findClientById(Long chatId) {
 		Optional<ClientEntity> clientOptional = clientRepository.findById(chatId);
-		if(clientOptional.isPresent()) {
+		if (clientOptional.isPresent()) {
 			return new ClientDto(clientOptional.get());
-		}
-		else
+
+		} else
 			return null;
 	}
+
 	@Transactional
 	public ClientDto add(ClientDto clientDto, Long chatId) {
-		Optional<ClientEntity> clientOptional = clientRepository
-				.findById(chatId);
-		if(clientOptional.isEmpty()) {
+
+		Optional<ClientEntity> clientOptional = clientRepository.findById(chatId);
+		if (clientOptional.isEmpty()) {
 			ClientEntity clientEntity = new ClientEntity();
 			clientEntity.setId(chatId);
 			clientEntity.setCpf_cnpj(clientDto.getCpfCnpj());
 			clientEntity.setName(clientDto.getName());
 			clientEntity.setPhone(clientDto.getPhoneNumber());
-			return new ClientDto(clientRepository.save(clientEntity));
+			return new ClientDto(clientRepository.saveAndFlush(clientEntity));
 		}
 		throw new RuntimeException("Cliente já existe!");
 	}
 
-	public List<ClientAllInfoDto> findClientAllDto() {
-		List<ClientAllInfoEntity> allEntities = clientAllInfoRepository.findClientAllDto();
-		List<ClientAllInfoDto> allDtos = new ArrayList<ClientAllInfoDto>();
-		for(ClientAllInfoEntity e : allEntities) {
-			allDtos.add(new ClientAllInfoDto(e));
+	public List<ClienteAllDto> findAllClientsAllInfo() {
+		List<ClientDto> clientDtos = findAll();
+		List<ProductEntity> productEntities = productRepository.findAll();
+		List<ProductDto> productDtos = productEntities.stream().map(ProductDto::new).collect(Collectors.toList());
+		List<ClienteAllDto> dtos = new ArrayList<>();
+		for (ClientDto c : clientDtos) {
+			ClienteAllDto client = new ClienteAllDto(
+					c.getChatId(), c.getCpfCnpj(), c.getName(), c.getPhoneNumber(), 0, 0);
+			List<HistoryEntity> historyEntities = historyRepository.findByClientId(c.getChatId());
+			List<HistoryDto> historyDtos = historyEntities.stream().map(HistoryDto::new).collect(Collectors.toList());
+			long count = 0;
+			BigDecimal mean = new BigDecimal(0);
+			for (HistoryDto h : historyDtos) {
+				if (h.getClientId() == c.getChatId()) {
+					count++;
+					mean.add(findPriceById(h.getProductId(), productDtos));
+				}
+				
+			}
+			if(count == 0)
+				continue;
+			client.setNumQueries(count);
+			client.setPriceMean((mean.divide(new BigDecimal(count))).doubleValue());
+
 		}
-		return allDtos;
+		return dtos;
+	}
+	
+	private BigDecimal findPriceById(long id, List<ProductDto> pList) {
+		for(ProductDto p : pList) {
+			if(p.getId() == id)
+				return p.getPrice();
+		}
+		return null;
 	}
 }

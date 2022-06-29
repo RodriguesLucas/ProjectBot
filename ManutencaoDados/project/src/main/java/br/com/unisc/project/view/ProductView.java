@@ -21,7 +21,6 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 
@@ -376,7 +375,7 @@ public class ProductView extends JFrame {
 
 		buttonConfirmDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				productViewController.delete(comboBoxProductDelete);
+				productViewController.delete(comboBoxProductDelete, ProductView.this);
 				ProductView.this.dispose();
 			}
 		});

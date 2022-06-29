@@ -111,8 +111,23 @@ public class ProductViewController {
 		}
 	}
 
-	public void delete(JComboBox<ProductDto> comboBoxProductDelete) {
-		productViewService.delete((ProductDto) comboBoxProductDelete.getSelectedItem());
+	public void delete(JComboBox<ProductDto> comboBoxProductDelete, ProductView productView) {
+
+		if (comboBoxProductDelete.getSelectedItem() != null) {
+			ResponseEntity<ProductDto> responseEntity = productViewService
+					.delete((ProductDto) comboBoxProductDelete.getSelectedItem());
+			if (responseEntity.getStatusCode() == HttpStatus.OK) {
+				JOptionPane.showMessageDialog(productView, "Produto Deletado!", "Sucesso!",
+						JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(productView, "Algo deu errado!", "Erro!",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+
+		} else {
+			JOptionPane.showMessageDialog(productView, "Não há categorias no banco!", "Atenção!",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 
 }

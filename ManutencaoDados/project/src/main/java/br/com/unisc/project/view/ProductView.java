@@ -311,9 +311,31 @@ public class ProductView extends JFrame {
 		productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
 				comboBoxProductCategoryEdit, comboBoxProductCategoryDelete);
 		// funções dos botões
+
+		buttonConfirmEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (bs == null) {
+					buttonProductImageEdit.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							bs = productViewController.getPhotoByte(ProductView.this);
+						}
+					});
+				}
+				productViewController.editProduct(bs, comboBoxDescriptionEdit, textFieldNewDescriptionEdit,
+						comboBoxNewProductCategoryEdit, textFieldPriceEdit, textFieldProductInfoEdit);
+			}
+		});
+
 		buttonProductImageAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				bs = productViewController.getPhotoByte(ProductView.this);
+			}
+		});
+
+		comboBoxProductCategoryEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				productViewController.setComboBoxNewProductCategoryEdit(comboBoxProductCategoryEdit,
+						comboBoxDescriptionEdit);
 			}
 		});
 
@@ -322,14 +344,17 @@ public class ProductView extends JFrame {
 				if (bs == null) {
 					buttonProductImageAdd.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							byte[] bt = productViewController.getPhotoByte(ProductView.this);
+							bs = productViewController.getPhotoByte(ProductView.this);
 						}
 					});
 				}
 				productViewController.addProduct(comboBoxProductCategoryAdd, textFieldProductInfoAdd, textFieldPriceAdd,
 						textFieldDescriptionAdd, bs);
+				productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
+						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete);
 			}
 		});
+
 		buttonCancelAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ProductView.this.dispose();

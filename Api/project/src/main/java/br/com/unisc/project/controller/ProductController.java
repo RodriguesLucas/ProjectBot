@@ -20,10 +20,15 @@ import br.com.unisc.project.service.ProductService;
 public class ProductController {
 	@Autowired
 	private ProductService productService;
-	
+
 	@GetMapping(value = "/category/{id}")
-	public List<ProductDto> findProductsByCategoryId(@PathVariable Long id){
+	public List<ProductDto> findProductsByCategoryId(@PathVariable Long id) {
 		return productService.findProductsByCategoryId(id);
+	}
+	
+	@GetMapping("/name{name}")
+	public ProductDto findByProductById(@PathVariable String name) {
+		return productService.findByProductByName(name);
 	}
 	
 	@GetMapping("/{id}")

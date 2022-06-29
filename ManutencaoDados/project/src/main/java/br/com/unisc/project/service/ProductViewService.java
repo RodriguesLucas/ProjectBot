@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -85,7 +86,77 @@ public class ProductViewService {
 		HttpEntity<ProductDto> requestEntity = new HttpEntity<ProductDto>(dto, headers);
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.postForEntity(uri, requestEntity, ProductDto.class);
+		textFieldPriceAdd.setText("");
+		textFieldProductInfoAdd.setText("");
+		textFieldDescriptionAdd.setText("");
+		bs = null;
 		return dto;
+	}
+
+	public void insertComboBoxProductCategoryEdit(JComboBox comboBoxProductCategoryEdit) {
+		CategoryDto[] categoryDtos = findCategoryEdit();
+		comboBoxProductCategoryEdit.removeAllItems();
+		for (CategoryDto categoryDto : categoryDtos) {
+			comboBoxProductCategoryEdit.addItem(categoryDto.getDescription());
+		}
+	}
+
+	private CategoryDto[] findCategoryEdit() {
+		String uri = URlBaseCategory.concat("/produt/edit");
+		System.out.println("test");
+		RestTemplate restTemplate = new RestTemplate();
+		CategoryDto[] categoryDto = restTemplate.getForObject(uri, CategoryDto[].class);
+		return categoryDto;
+	}
+
+	public void setComboBoxNewProductCategoryEdit(JComboBox comboBoxProductCategoryEdit,
+			JComboBox comboBoxNewProductCategoryEdit) {
+		CategoryDto categoryDto = findCategoryByName(comboBoxProductCategoryEdit.getSelectedItem().toString());
+		ProductDto[] productDtos = findProductByCategoryId(categoryDto.getId());
+		comboBoxNewProductCategoryEdit.removeAllItems();
+		for (ProductDto productDto : productDtos) {
+			comboBoxNewProductCategoryEdit.addItem(productDto.getDescription());
+		}
+	}
+
+	private ProductDto[] findProductByCategoryId(Long id) {
+		String uri = URlBase.concat("/category/".concat(id.toString()));
+		RestTemplate restTemplate = new RestTemplate();
+		ProductDto[] productDtos = restTemplate.getForObject(uri, ProductDto[].class);
+		return productDtos;
+	}
+
+	public void editProduct(byte[] bs, JComboBox comboBoxDescriptionEdit, JTextField textFieldNewDescriptionEdit,
+			JComboBox comboBoxNewProductCategoryEdit, JTextField textFieldPriceEdit,
+			JTextField textFieldProductInfoEdit) {
+		ProductDto dto = findProductByName(comboBoxDescriptionEdit.getSelectedItem().toString());
+
+		ProductDto productDto = new ProductDto();
+		productDto.setCategoryEntity(
+				findCategoryByName(comboBoxNewProductCategoryEdit.getSelectedItem().toString()).getCategoryParentId());
+		productDto.setPhoto(bs);
+		productDto.setInfoTec(textFieldProductInfoEdit.getText());
+		productDto.setPrice(BigDecimal.valueOf(Double.parseDouble(textFieldPriceEdit.getText())));
+		productDto.setDescription(textFieldNewDescriptionEdit.getText());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		URI uri = null;
+		try {
+			uri = new URI(URlBase.concat("/") + dto.getId());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.put(uri, productDto);
+
+	}
+
+	private ProductDto findProductByName(String name) {
+		String uri = URlBaseCategory.concat("/name/").concat(name);
+		RestTemplate restTemplate = new RestTemplate();
+		ProductDto categoryDto = restTemplate.getForObject(uri, ProductDto.class);
+		return categoryDto;
 	}
 
 }

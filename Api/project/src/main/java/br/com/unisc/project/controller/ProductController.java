@@ -22,20 +22,20 @@ public class ProductController {
 	private ProductService productService;
 
 	@GetMapping("/categoryDel/{id}")
-	public List<ProductDto> findAllProductyForDel(@PathVariable Long id){
+	public List<ProductDto> findAllProductyForDel(@PathVariable Long id) {
 		return productService.findAllProductyForDel(id);
 	}
-	
+
 	@GetMapping(value = "/category/{id}")
 	public List<ProductDto> findProductsByCategoryId(@PathVariable Long id) {
 		return productService.findProductsByCategoryId(id);
 	}
-	
+
 	@GetMapping("/name{name}")
 	public ProductDto findByProductById(@PathVariable String name) {
 		return productService.findByProductByName(name);
 	}
-	
+
 	@GetMapping("/{id}")
 	public ProductDto findByProductById(@PathVariable Long id) {
 		return productService.findByProductById(id);

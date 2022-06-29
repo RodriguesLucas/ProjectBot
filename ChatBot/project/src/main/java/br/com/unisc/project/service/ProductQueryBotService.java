@@ -1,3 +1,7 @@
+/* 
+ *  Classe principal do bot, regras mais próximas da conexão
+ * Autores @nicolasfischer @brunobolzan @lucasrodrigues 
+ */
 package br.com.unisc.project.service;
 
 import java.util.ArrayList;
@@ -11,14 +15,19 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-// Classe principal do bot
 @Component
 public class ProductQueryBotService extends TelegramLongPollingBot implements Callback {
 
 	private ArrayList<Session> activeSessions = new ArrayList<>(); // Sessões de clientes ativas
 	private ArrayList<Update> updateList = new ArrayList<>(); // Lista de atualiações recebidas
 
-	// Método chamado quando o bot recebe mensagens
+
+	/*
+	 * onUpdateReceived
+	 * Objetivo: utilizar quando o bot recebe mensagens
+	 * Retorno: nenhum
+	 * Parâmetros: Update update
+	 */
 	@Override
 	public void onUpdateReceived(Update update) {
 		updateList.add(update);
@@ -39,36 +48,68 @@ public class ProductQueryBotService extends TelegramLongPollingBot implements Ca
 		}
 	}
 
-	// Retorna o nome do bot
+	/*
+	 * reescrita do método getBotToken
+	 * Objetivo: retornar o nome do bot
+	 * Retorno: String
+	 * Parâmetros: nenhum
+	 */
 	@Override
 	public String getBotUsername() {
 		return "TrabalhoChatBot";
 	}
 
-	// Retorna o token do bot
+	/*
+	 * reescrita do método getBotToken
+	 * Objetivo: retornar o token do bot
+	 * Retorno: String
+	 * Parâmetros: nenhum
+	 */
 	@Override
 	public String getBotToken() {
 		return "5393627617:AAEC3k1JBaUEe_oL01XpcsQQD-WTTsy4olg";
 	}
 
-	// Método que remove a sessão quando esta termina
+
+	/*
+	 * callback
+	 * Objetivo: remover a sessão quando ela terminar
+	 * Retorno: nenhum
+	 * Parâmetros: Object o
+	 */
 	@Override
 	public void callback(Object o) {
 		Session s = (Session) o;
 		activeSessions.remove(s);
 	}
 
-	// Método para enviar mensagens
+
+	/*
+	 * checkUpdates
+	 * Objetivo: enviar mensagens de texto
+	 * Retorno: Message
+	 * Parâmetros: String chatId, String text
+	 */
 	public Message sendMessage(String chatId, String text) throws TelegramApiException {
 		return execute(SendMessage.builder().chatId(chatId).text(text).build());
 	}
 
-	// Método para enviar imagens
+
+	/*
+	 * checkUpdates
+	 * Objetivo: enviar imagens
+	 * Retorno: Message
+	 * Parâmetros: String chatId, InputFile photo
+	 */
 	public Message sendPhoto(String chatId, InputFile photo) throws TelegramApiException {
 		return execute(SendPhoto.builder().chatId(chatId).photo(photo).build());
 	}
 
-	// Método para checar se há atualizações para uma dada sessão
+	/*
+	 * checkUpdates
+	 * Objetivo: checar se há atualizações para uma dada sessão
+	 * Parâmetros: long chatId
+	 */
 	public synchronized Update checkUpdates(long chatId) {
 		for (Update u : updateList)
 			if (u.getMessage().getChatId() == chatId) {

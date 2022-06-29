@@ -16,6 +16,12 @@ public class CategoryDto {
 		this.categoryParentId = categoryParentId;
 	}
 
+	/*
+	 * getId
+	 * Objetivo: retornar id do objeto relacionado
+	 * Retorno: long
+	 * Parâmetros: nenhum
+	 */
 	public Long getId() {
 		return id;
 	}

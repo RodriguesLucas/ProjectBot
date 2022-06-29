@@ -1,3 +1,7 @@
+/* 
+ *  Classe que trata da main na parte da view
+ * Autores @nicolasfischer @brunobolzan @lucasrodrigues 
+ */
 package br.com.unisc.project.view;
 
 //Importações
@@ -41,7 +45,11 @@ public class MainView extends JFrame {
 	private final String stringToolTipQueries = "Exibe uma janela para verificar as"
 			+ " consultas feitas pelos clientes.";
 
-	// Construtor
+	/*
+	 * construtor da classe
+	 * Objetivo: instanciar um objeto
+	 * Parâmetros: String title
+	 */
 	public MainView(String title) {
 		super(title); // Chama construtor da classe pai
 		initComponents(); // Inicia os componentes
@@ -93,9 +101,7 @@ public class MainView extends JFrame {
 		buttonProducts.setMnemonic(KeyEvent.VK_P);
 		buttonQueries.setMnemonic(KeyEvent.VK_V);
 
-		// Atribui ícones aos botões
 
-		// Atribui listeners aos botões
 
 		// Definição e configuração de layout
 		GroupLayout layout = new GroupLayout(panelMain);

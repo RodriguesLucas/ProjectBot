@@ -71,13 +71,22 @@ public class ProductView extends JFrame {
 	private ProductViewController productViewController;
 	private byte[] bs;
 
-	// Construtor
+	/*
+	 * construtor da classe
+	 * Objetivo: instanciar um objeto
+	 * Parâmetros: String name
+	 */
 	public ProductView(String name) {
 		super(name);
 		initComponents();
 	}
 
-	// Função que inicializa os componentes
+
+	/*
+	 * construtor da classe
+	 * Objetivo: inicializar os componentes
+	 * Parâmetros: nenhum
+	 */
 	private void initComponents() {
 		// Destrói janela ao fechar
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

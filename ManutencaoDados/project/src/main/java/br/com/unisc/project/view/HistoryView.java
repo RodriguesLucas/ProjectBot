@@ -1,3 +1,7 @@
+/* 
+ *  Classe que trata da view e faz inicializações das configurações necessárias para o histórico
+ * Autores @nicolasfischer @brunobolzan @lucasrodrigues 
+ */
 package br.com.unisc.project.view;
 
 //Importações
@@ -36,14 +40,23 @@ public class HistoryView extends JFrame {
 	private JButton buttonRefresh;
 	private HistoryViewController historyViewController;
 
-	// Construtor
+	/*
+	 * construtor da classe
+	 * Objetivo: instanciar um objeto
+	 * Parâmetros: nenhum
+	 */
 	public HistoryView(String title) {
 		super(title);
 		historyViewController = new HistoryViewController(this);
 		initComponents();
 	}
 
-	// Função que inicializa os componentes
+
+	/*
+	 * initComponents
+	 * Objetivo: inicializar os componentes
+	 * Parâmetros: nenhum
+	 */
 	private void initComponents() {
 		// Destrói janela ao fechar
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -1,15 +1,33 @@
+/* 
+ *  Classe que trata a sessão instanciada pelo usuário ao começar o processo de categoria
+ * Autores @nicolasfischer @brunobolzan @lucasrodrigues 
+ */
+
 package br.com.unisc.project.dtos;
 
 public class CategoryDto {
 
+	// atributos
 	private Long id;
 	private Long categoryParentId;
 	private String description;
 
+	
+	/*
+	 * construtor da classe
+	 * Objetivo: instanciar um objeto
+	 * Parâmetros: nenhum
+	 */
 	public CategoryDto() {
 
 	}
 
+	
+	/*
+	 * sobrecarga do construtor da classe
+	 * Objetivo: instanciar um objeto
+	 * Parâmetros: String description, Long categoryParentId, Long id
+	 */
 	public CategoryDto(String description, Long categoryParentId, Long id) {
 		this.id = id;
 		this.description = description;

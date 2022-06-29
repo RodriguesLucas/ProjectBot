@@ -1,3 +1,9 @@
+/* 
+ *  Classe que trata da view e faz inicializações das configurações necessárias para a categoria
+ * Autores @nicolasfischer @brunobolzan @lucasrodrigues 
+ */
+
+
 package br.com.unisc.project.view;
 
 import javax.swing.JFrame;

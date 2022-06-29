@@ -382,6 +382,7 @@ public class ProductView extends JFrame {
 		// monitora a comboBox do delete
 		comboBoxProductCategoryDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				productViewController.setComboBoxDelete(comboBoxProductCategoryDelete, comboBoxProductDelete);
 			}
 		});

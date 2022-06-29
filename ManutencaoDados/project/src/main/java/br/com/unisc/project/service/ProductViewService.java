@@ -116,14 +116,12 @@ public class ProductViewService {
 		}
 	}
 
-
 	private void insertComboBoxProductCategoryDel(JComboBox<CategoryDto> comboBoxProductCategoryDelete) {
 		CategoryDto[] categoryDtos = findCategoryDel();
 		comboBoxProductCategoryDelete.removeAllItems();
 		for (CategoryDto categoryDto : categoryDtos) {
 			comboBoxProductCategoryDelete.addItem(categoryDto);
 		}
-		
 	}
 
 	public ResponseEntity<ProductDto> addProduct(CategoryDto categoryDto, JTextField textFieldProductInfoAdd,

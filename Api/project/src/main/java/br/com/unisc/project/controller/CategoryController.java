@@ -24,6 +24,11 @@ public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
 	
+	@GetMapping("/categoryDel")
+	public List<CategoryDto> findAllCategoryDel(){
+		return categoryService.findAllCategoryDel();
+	}
+	
 	@GetMapping("/product")
 	public List<CategoryDto> findAllCategoriesForProductAdd(){
 		return categoryService.findAllCategoriesForProductAdd();

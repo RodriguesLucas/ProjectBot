@@ -34,7 +34,6 @@ public class ClientService {
 		Optional<ClientEntity> clientOptional = clientRepository.findById(chatId);
 		if(clientOptional.isPresent()) {
 			return new ClientDto(clientOptional.get());
-			
 		}
 		else
 			return null;

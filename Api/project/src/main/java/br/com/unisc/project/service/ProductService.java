@@ -25,6 +25,11 @@ public class ProductService {
 		ProductEntity entity = productRepository.findByDescription(name);
 		return new ProductDto(entity);
 	}
+	
+	public List<ProductDto> findAllProductyForDel(Long id) {
+		List<ProductEntity> entities = productRepository.findAllProductyForDel(id);
+		return entities.stream().map(ProductDto::new).collect(Collectors.toList());
+	}
 
 	public List<ProductDto> findProductsByCategoryId(Long id) {
 		List<ProductEntity> products = productRepository.findAllByCategoryId(id);
@@ -50,7 +55,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ProductDto editProdut(ProductDto productDto, Long id) {
+	public ProductDto editProduct(ProductDto productDto, Long id) {
 		Optional<ProductEntity> entityOptional = productRepository.findById(id);
 		Optional<CategoryEntity> categoryOptional = categoryRepository.findById(productDto.getCategoryEntity());
 		ProductEntity entity = new ProductEntity();
@@ -58,7 +63,11 @@ public class ProductService {
 		entity.setDescription(productDto.getDescription());
 		entity.setId(entityOptional.get().getId());
 		entity.setInfoTec(productDto.getInfoTec());
-		entity.setPhoto(productDto.getPhoto());
+		if (productDto.getPhoto() == null) {
+			entity.setPhoto(null);
+		} else {
+			entity.setPhoto(productDto.getPhoto());
+		}
 		entity.setPrice(productDto.getPrice());
 		return new ProductDto(productRepository.save(entity));
 	}
@@ -72,5 +81,6 @@ public class ProductService {
 		return new ProductDto();
 
 	}
+	
 
 }

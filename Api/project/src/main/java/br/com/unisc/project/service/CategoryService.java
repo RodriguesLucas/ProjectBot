@@ -22,6 +22,13 @@ public class CategoryService {
 	@Autowired
 	private ProductRepository productRepository;
 
+	public List<CategoryDto> findAllCategoryDel() {
+		List<CategoryEntity> categoryEntities = categoryRepository.findCategoryDel();
+		return categoryEntities.stream().map(CategoryDto::new).collect(Collectors.toList());
+		
+		
+	}
+	
 	public List<CategoryDto> findAllCategoriesForProductAdd() {
 		List<CategoryEntity> findAllCategoriesForProductAdd = categoryRepository.findAllCategoriesForProductAdd();
 		return findAllCategoriesForProductAdd.stream().map(CategoryDto::new).collect(Collectors.toList());
@@ -147,4 +154,5 @@ public class CategoryService {
 		}
 		return new CategoryDto();
 	}
+
 }

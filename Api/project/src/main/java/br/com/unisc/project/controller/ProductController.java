@@ -21,6 +21,11 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	@GetMapping("/categoryDel/{id}")
+	public List<ProductDto> findAllProductyForDel(@PathVariable Long id){
+		return productService.findAllProductyForDel(id);
+	}
+	
 	@GetMapping(value = "/category/{id}")
 	public List<ProductDto> findProductsByCategoryId(@PathVariable Long id) {
 		return productService.findProductsByCategoryId(id);
@@ -43,7 +48,7 @@ public class ProductController {
 
 	@PutMapping(value = "/{id}")
 	public ProductDto editProduct(@RequestBody ProductDto productDto, @PathVariable Long id) {
-		return productService.editProdut(productDto, id);
+		return productService.editProduct(productDto, id);
 	}
 
 	@DeleteMapping(value = "/{id}")

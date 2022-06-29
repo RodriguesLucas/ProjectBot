@@ -10,9 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import br.com.unisc.project.entities.CategoryEntity;
 
-
 @Repository
-public interface CategoryRepository extends JpaRepository<CategoryEntity, Long>{
+public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
 
 	Optional<CategoryEntity> findByDescription(String description);
 
@@ -35,4 +34,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long>{
 
 	@Query(value = "select * from category c where c.id in (select category_id from product)", nativeQuery = true)
 	List<CategoryEntity> findAllCategoriesForProductEdit();
+
+	@Query(value = "select distinct * from category c where c.id in (select p.category_id from product p where p.id not in (select h.product_id from history h))", nativeQuery = true)
+	List<CategoryEntity> findCategoryDel();
 }

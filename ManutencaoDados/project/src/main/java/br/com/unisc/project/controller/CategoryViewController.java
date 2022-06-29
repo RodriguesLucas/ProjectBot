@@ -59,7 +59,6 @@ public class CategoryViewController {
 			JOptionPane.showMessageDialog(categoryView, "Não há categorias no banco!", "Atenção!",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
-
 	}
 
 	public void setData(JComboBox<CategoryDto> comboBoxCategoryParentAdd, JComboBox<CategoryDto> comboBoxCategoryEdit,

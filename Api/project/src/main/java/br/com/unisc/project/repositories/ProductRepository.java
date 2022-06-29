@@ -20,4 +20,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long>{
 
 	ProductEntity findByDescription(@Param("name") String name);
 
+	@Query(value = "select * from product p where p.category_id = :id and p.id not in (select h.product_id from history h);", nativeQuery = true)
+	List<ProductEntity> findAllProductyForDel(@Param("id") Long id);
+
 }

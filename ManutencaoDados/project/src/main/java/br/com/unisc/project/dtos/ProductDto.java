@@ -74,6 +74,10 @@ public class ProductDto {
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
-	
+
+	@Override
+	public String toString() {
+		return description;
+	}
 
 }

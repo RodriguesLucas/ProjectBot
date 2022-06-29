@@ -8,6 +8,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 
 import br.com.unisc.project.controller.ProductViewController;
+import br.com.unisc.project.dtos.CategoryDto;
+import br.com.unisc.project.dtos.ProductDto;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -19,6 +21,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 
@@ -33,7 +36,7 @@ public class ProductView extends JFrame {
 	private JLabel labelDescriptionAdd;
 	private JTextField textFieldDescriptionAdd;
 	private JLabel labelProductCategoryAdd;
-	private JComboBox comboBoxProductCategoryAdd;
+	private JComboBox<CategoryDto> comboBoxProductCategoryAdd;
 	private JLabel labelProductPriceAdd;
 	private JTextField textFieldPriceAdd;
 	private JLabel labelProductInfoAdd;
@@ -44,13 +47,13 @@ public class ProductView extends JFrame {
 	private JButton buttonCancelAdd;
 	private JPanel panelEditProduct;
 	private JLabel labelDescriptionEdit;
-	private JComboBox comboBoxDescriptionEdit;
+	private JComboBox<ProductDto> comboBoxDescriptionEdit;
 	private JLabel labelProductCategoryEdit;
-	private JComboBox comboBoxProductCategoryEdit;
+	private JComboBox<CategoryDto> comboBoxProductCategoryEdit;
 	private JLabel labelNewDescriptionEdit;
 	private JTextField textFieldNewDescriptionEdit;
 	private JLabel labelNewProductCategoryEdit;
-	private JComboBox comboBoxNewProductCategoryEdit;
+	private JComboBox<CategoryDto> comboBoxNewProductCategoryEdit;
 	private JLabel labelProductPriceEdit;
 	private JTextField textFieldPriceEdit;
 	private JLabel labelProductInfoEdit;
@@ -63,9 +66,9 @@ public class ProductView extends JFrame {
 	private JLabel labelProductCategoryDelete;
 	private JButton buttonConfirmDelete;
 	private JButton buttonCancelDelete;
-	private JComboBox comboBoxProductCategoryDelete;
+	private JComboBox<CategoryDto> comboBoxProductCategoryDelete;
 	private JLabel labelProductDelete;
-	private JComboBox comboBoxProductDelete;
+	private JComboBox<ProductDto> comboBoxProductDelete;
 	private ProductViewController productViewController;
 	private byte[] bs;
 
@@ -87,7 +90,7 @@ public class ProductView extends JFrame {
 		labelDescriptionAdd = new JLabel("Descrição:", JLabel.TRAILING);
 		textFieldDescriptionAdd = new JTextField();
 		labelProductCategoryAdd = new JLabel("Categoria:", JLabel.TRAILING);
-		comboBoxProductCategoryAdd = new JComboBox();
+		comboBoxProductCategoryAdd = new JComboBox<CategoryDto>();
 		labelProductPriceAdd = new JLabel("Preço:", JLabel.TRAILING);
 		textFieldPriceAdd = new JFormattedTextField();
 		labelProductInfoAdd = new JLabel("<html><p style=\"text-align:right\">" + "Informação<br>Técnica:</p><html>",
@@ -99,14 +102,14 @@ public class ProductView extends JFrame {
 		buttonCancelAdd = new JButton("Cancelar");
 		panelEditProduct = new JPanel();
 		labelDescriptionEdit = new JLabel("Produto:", JLabel.TRAILING);
-		comboBoxDescriptionEdit = new JComboBox();
+		comboBoxDescriptionEdit = new JComboBox<ProductDto>();
 		labelProductCategoryEdit = new JLabel("Categoria:", JLabel.TRAILING);
-		comboBoxProductCategoryEdit = new JComboBox();
+		comboBoxProductCategoryEdit = new JComboBox<CategoryDto>();
 		labelNewDescriptionEdit = new JLabel("Descrição:", JLabel.TRAILING);
 		textFieldNewDescriptionEdit = new JTextField();
 		labelNewProductCategoryEdit = new JLabel(
 				"<html><p style=\"text-align:right\">" + "Nova<br>Categoria:</p><html>", JLabel.TRAILING);
-		comboBoxNewProductCategoryEdit = new JComboBox();
+		comboBoxNewProductCategoryEdit = new JComboBox<CategoryDto>();
 		labelProductPriceEdit = new JLabel("Preço:", JLabel.TRAILING);
 		textFieldPriceEdit = new JFormattedTextField();
 		labelProductInfoEdit = new JLabel("<html><p style=\"text-align:right\">" + "Informação<br>Técnica:</p><html>",
@@ -120,9 +123,9 @@ public class ProductView extends JFrame {
 		labelProductCategoryDelete = new JLabel("Categoria:", JLabel.TRAILING);
 		buttonConfirmDelete = new JButton("Confirmar");
 		buttonCancelDelete = new JButton("Cancelar");
-		comboBoxProductCategoryDelete = new JComboBox();
+		comboBoxProductCategoryDelete = new JComboBox<CategoryDto>();
 		labelProductDelete = new JLabel("Produto:", JLabel.TRAILING);
-		comboBoxProductDelete = new JComboBox();
+		comboBoxProductDelete = new JComboBox<ProductDto>();
 		productViewController = new ProductViewController();
 		bs = null;
 		setContentPane(panelMain); // Define o painel da janela
@@ -309,36 +312,33 @@ public class ProductView extends JFrame {
 
 		// seta valores nas comboBox
 		productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
-				comboBoxProductCategoryEdit, comboBoxProductCategoryDelete);
-		// funções dos botões
+				comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit,
+				comboBoxDescriptionEdit);
 
-		buttonProductImageEdit.addActionListener(new ActionListener() {
+		// funções dos botões
+		// Adicionar produto
+		buttonConfirmAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				bs = productViewController.getPhotoByte(ProductView.this);
+				if (bs == null) {
+					bs = productViewController.getPhotoByte(ProductView.this);
+				}
+				productViewController.addProduct(comboBoxProductCategoryAdd, textFieldProductInfoAdd, textFieldPriceAdd,
+						textFieldDescriptionAdd, bs, ProductView.this);
+
+				productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
+						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit,
+						comboBoxProductDelete);
 			}
 		});
-		
+
+		// botão de selecionar a foto
 		buttonProductImageAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				bs = productViewController.getPhotoByte(ProductView.this);
 			}
 		});
-		
-		buttonConfirmEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (bs == null) {
-					buttonProductImageEdit.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							bs = productViewController.getPhotoByte(ProductView.this);
-						}
-					});
-				}
-				productViewController.editProduct(bs, comboBoxDescriptionEdit, textFieldNewDescriptionEdit,
-						comboBoxNewProductCategoryEdit, textFieldPriceEdit, textFieldProductInfoEdit);
-			}
-		});
 
-
+		// monitora a comboBox
 		comboBoxProductCategoryEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				productViewController.setComboBoxNewProductCategoryEdit(comboBoxProductCategoryEdit,
@@ -346,24 +346,60 @@ public class ProductView extends JFrame {
 			}
 		});
 
-		
-		buttonConfirmAdd.addActionListener(new ActionListener() {
+		// botão de confirmar edit
+		buttonConfirmEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (bs == null) {
-					buttonProductImageAdd.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							bs = productViewController.getPhotoByte(ProductView.this);
-						}
-					});
+					bs = productViewController.getPhotoByte(ProductView.this);
 				}
-				productViewController.addProduct(comboBoxProductCategoryAdd, textFieldProductInfoAdd, textFieldPriceAdd,
-						textFieldDescriptionAdd, bs);
+				productViewController.editProduct(bs, comboBoxDescriptionEdit, textFieldNewDescriptionEdit,
+						comboBoxNewProductCategoryEdit, textFieldPriceEdit, textFieldProductInfoEdit,
+						comboBoxProductCategoryEdit, ProductView.this);
+
 				productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
-						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete);
+						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit, comboBoxDescriptionEdit);
+
 			}
 		});
 
+		// botão de pegar a imagem do edit
+		buttonProductImageEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				bs = productViewController.getPhotoByte(ProductView.this);
+			}
+		});
+
+		buttonConfirmDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
+						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit,
+						comboBoxProductDelete);
+			}
+		});
+
+		// monitora a comboBox do delete
+		comboBoxProductCategoryDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				productViewController.setComboBoxDelete(comboBoxProductCategoryDelete, comboBoxProductDelete);
+			}
+		});
+
+		// Funcionalidades dos botões de cancelar
 		buttonCancelAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ProductView.this.dispose();
+			}
+		});
+
+		buttonCancelEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ProductView.this.dispose();
+			}
+		});
+
+		buttonCancelDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ProductView.this.dispose();
 			}

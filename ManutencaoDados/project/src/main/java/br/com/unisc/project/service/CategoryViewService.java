@@ -124,7 +124,7 @@ public class CategoryViewService {
 	public ResponseEntity<CategoryDto> putCategory(CategoryDto comboBoxCategoryParentEdit,
 			CategoryDto comboBoxCategoryEdit, String textFieldNewDescriptionEdit) {
 		CategoryDto categoryDto = new CategoryDto();
-		if (!textFieldNewDescriptionEdit.strip().trim().isEmpty()) {
+		if (!textFieldNewDescriptionEdit.trim().isEmpty()) {
 			if (comboBoxCategoryParentEdit.getId() != 0l) {
 				CategoryDto categoryParentDto = findCategoryById(comboBoxCategoryParentEdit.getId());
 				categoryDto.setCategoryParentId(categoryParentDto.getId());

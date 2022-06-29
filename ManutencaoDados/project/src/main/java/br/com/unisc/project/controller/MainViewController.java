@@ -1,3 +1,8 @@
+/* 
+ *  Classe que estabelece parametros base e possibilita a utilização de Spring
+ * Autores @nicolasfischer @brunobolzan @lucasrodrigues 
+ */
+
 package br.com.unisc.project.controller;
 
 import org.springframework.boot.ApplicationArguments;

@@ -1,3 +1,7 @@
+/* 
+ *  Classe da execução da SpringApplication
+ * Autores @nicolasfischer @brunobolzan @lucasrodrigues 
+ */
 package br.com.unisc.project;
 
 import org.springframework.boot.SpringApplication;

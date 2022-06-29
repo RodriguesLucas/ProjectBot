@@ -20,26 +20,61 @@ public class CategoryDto {
 		return id;
 	}
 
+	/*
+	 * setId
+	 * Objetivo: setar o id do objeto relacionado
+	 * Retorno: void
+	 * Parâmetros: Long id
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	/*
+	 * getCategoryParentId
+	 * Objetivo: retornar categoryParentId do objeto relacionado
+	 * Retorno: long
+	 * Parâmetros: nenhum
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/*
+	 * setDescription
+	 * Objetivo: setar description do objeto relacionado
+	 * Retorno: void
+	 * Parâmetros: String description
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
+	/*
+	 * getCategoryParentId
+	 * Objetivo: retornar categoryParentId do objeto relacionado
+	 * Retorno: long
+	 * Parâmetros: nenhum
+	 */
 	public Long getCategoryParentId() {
 		return categoryParentId;
 	}
 
+	/*
+	 * setCategoryParentId
+	 * Objetivo: setar categoryParentId do objeto relacionado
+	 * Retorno: void
+	 * Parâmetros: Long categoryParentId
+	 */
 	public void setCategoryParentId(Long categoryParentId) {
 		this.categoryParentId = categoryParentId;
 	}
 
+	/*
+	 * reescrita do método toString
+	 * Retorno: nenhum
+	 * Parâmetros: nenhum
+	 */
 	@Override
 	public String toString() {
 		return description;

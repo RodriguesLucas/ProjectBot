@@ -1,3 +1,7 @@
+/* 
+ *  Classe que trata a sessão instanciada pelo usuário ao começar o processo de conversação
+ * Autores @nicolasfischer @brunobolzan @lucasrodrigues 
+ */
 package br.com.unisc.project.service;
 
 import java.io.ByteArrayInputStream;
@@ -17,7 +21,7 @@ import br.com.unisc.project.dtos.ClientDto;
 import br.com.unisc.project.dtos.HistoryDto;
 import br.com.unisc.project.dtos.ProductDto;
 
-// Sessão de um cliente
+// classe que implementa interface e reescreve étodos dela
 public class Session implements Runnable {
 	// Atributos
 	private long chatId;
@@ -27,7 +31,8 @@ public class Session implements Runnable {
 	private final int maxSeconds = 180;
 	private final String greeting = "Olá";
 	private int interactionStage;
-	private static final String URlBase = "http://localhost:8080/";
+	private static final String URlBase = "http://localhost:8080/";	// definindo url base para conexão
+	// inicializando atributos base como nulos
 	private CategoryDto[] categories = null;
 	private CategoryDto[] children = null;
 	private ProductDto[] products = null;
@@ -39,7 +44,12 @@ public class Session implements Runnable {
 	private long choice;
 	private boolean exit;
 
-	// Construtor
+	/*
+	 * construtor - Session
+	 * Objetivo: Método que instaciará um objeto oriundo da classe a partir do recebimento de argumentos padronizados
+	 * Retorno: void
+	 * Parâmetros: long chatId, Callback cb, ProductQueryBotService bot
+	 */
 	public Session(long chatId, Callback cb, ProductQueryBotService bot) {
 		this.chatId = chatId;
 		this.cb = cb;
@@ -47,30 +57,42 @@ public class Session implements Runnable {
 		this.interactionStage = 1;
 	}
 
-	// Cria thread para a sessão
+	/*
+	 * createThread
+	 * Objetivo: criar thread
+	 * Retorno: void
+	 * Parâmetros: nenhum
+	 */
 	public void createThread() {
 		thread = new Thread(this);
 		thread.start();
 	}
 
-	// Controla o fluxo da sessão
+	/*
+	 * reescrita do método run
+	 * Objetivo: criar thread
+	 * Retorno: void
+	 * Parâmetros: nenhum
+	 */
 	@Override
 	public void run() {
 		Update update = bot.checkUpdates(chatId);
 
 		Instant lastUpdate = null;
 
-		exit = false;
+		exit = false;	// controlador
 
+		// inicio do ciclo de rotina - do ... while - passa ao menos uma vez no bloco
 		do {
-			if (update == null) {
+			if (update == null) {	// caso atualização nula ocorrer - ou seja, não tiver atualização para aquele ID
 				update = bot.checkUpdates(chatId);
 				if (update == null && lastUpdate == null)
 					lastUpdate = Instant.now();
 				continue;
 			}
 			lastUpdate = Instant.ofEpochSecond(update.getMessage().getDate());
-			m = update.getMessage();
+			m = update.getMessage(); // armazenando mensagem do usuário
+			// tratamento de exções a partir da chamada de estágios
 			try {
 				switch (interactionStage) {
 				case 1:
@@ -107,6 +129,7 @@ public class Session implements Runnable {
 
 		} while (Instant.now().minusSeconds(lastUpdate.getEpochSecond()).getEpochSecond() < maxSeconds && !exit);
 		if (!exit) {
+			// tratando exção do tempo limite para ciclo
 			try {
 				bot.sendMessage(String.valueOf(chatId),
 						"Tempo de resposta esgotado. Recomece o diálogo do início se ainda deseja buscar produtos.");
@@ -117,62 +140,103 @@ public class Session implements Runnable {
 		cb.callback(this);
 	}
 
-	// Verifica o produto escolhido
+	/*
+	 * getChosenProduct
+	 * Objetivo: verificar produtos
+	 * Retorno: long
+	 * Parâmetros: String text, ProductDto[] products
+	 */
 	private long getChosenProduct(String text, ProductDto[] products) {
+		// tratando exceção
 		try {
 			return Long.valueOf(text);
 		} catch (NumberFormatException e) {
-			for (ProductDto p : products) {
-				if (p.getDescription() != null && p.getDescription().equalsIgnoreCase(text))
-					return p.getId();
+			for (ProductDto p : products) { // foreach para verificar produto
+				if (p.getDescription() != null && p.getDescription().equalsIgnoreCase(text)) // caso seja diferente de null e produto encontrado
+					return p.getId();	// retorna seu id
 			}
 		}
-		return -1;
+		return -1; //controlador de retorno negativo para caso não seja encontrada
 	}
 
-	// Verifica a categoria escolhida
+	/*
+	 * getChosenProduct
+	 * Objetivo: verificar categoria de produtos
+	 * Retorno: long
+	 * Parâmetros: String text, CategoryDto[] categories
+	 */
 	private long getChosenCategory(String text, CategoryDto[] categories) {
+		// tratando exceção
 		try {
 			return Long.valueOf(text);
 		} catch (NumberFormatException e) {
-			for (CategoryDto c : categories) {
-				if (c.getDescription() != null && c.getDescription().equalsIgnoreCase(text))
-					return c.getId();
+			for (CategoryDto c : categories) { // foreach para verificar categoria
+				if (c.getDescription() != null && c.getDescription().equalsIgnoreCase(text)) // caso seja diferente de null e categoria encontrada
+					return c.getId(); // retorna id
 			}
 		}
-		return -1;
+		return -1; //controlador de retorno negativo para caso não seja encontrada
 	}
 
-	// Valida o número de telefone
+	/*
+	 * isPhoneNumberValid
+	 * Objetivo: verificar telefone
+	 * Retorno: boolean
+	 * Parâmetros: String text
+	 */
 	private boolean isPhoneNumberValid(String text) {
-		if (!text.isBlank())
-			return true;
-		return false;
+		if (!text.isBlank()) // caso não esteja em branco
+			return true; // retorno positivo dizendo que está tudo ok
+		return false; // caso não seja digitado nada
 	}
 
-	// Valida o CPF ou CNPJ
+	/*
+	 * isCpfCnpjValid
+	 * Objetivo: verificar telefone
+	 * Retorno: boolean
+	 * Parâmetros: String text
+	 */
 	private boolean isCpfCnpjValid(String text) {
-		if (!text.isBlank() && text.length() >= 11 && text.length() <= 14)
-			return true;
-		return false;
+		if (!text.isBlank() && text.length() >= 11 && text.length() <= 14) // caso não esteja em brancon e a contagem de caracteres esteja ok
+			return true; // retorno positivo dizendo que está tudo ok
+		return false; // caso não seja digitado nada
 	}
 
-	// Compara uma sessão com a sessão atual
+	
+	/*
+	 * reescrita do método equals
+	 * Objetivo: Comparar uma sessão com a sessão atual
+	 * Retorno: boolean
+	 * Parâmetros: Object o
+	 */
 	@Override
 	public boolean equals(Object o) {
 		Session s = (Session) o;
-		if (s.getChatId() == chatId)
-			return true;
-		return false;
+		if (s.getChatId() == chatId) // caso ids de chat iguais
+			return true; // retorno positivo falando que são iguais
+		return false; // retorno negativo falando que são diferentes
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * stage1
+	 * Objetivo: realizar tratamento do cliente na sessão
+	 * Retorno: nenhum
+	 * Parâmetros: nenhum
+	 */
 	private void stage1() throws TelegramApiException {
 		String id = String.valueOf(chatId);
-		ClientDto currentClient = restTemplate.getForObject(URlBase.concat("/client/id/").concat(id), ClientDto.class);
-		if (currentClient != null) {
-			bot.sendMessage(id, greeting + ", " + currentClient.getName() + "!");
+		ClientDto currentClient = restTemplate.getForObject(URlBase.concat("/client/id/").concat(id), ClientDto.class); // tratando id da sessão a partirn da url 
+		if (currentClient != null) { // caso diferente de null
+			bot.sendMessage(id, greeting + ", " + currentClient.getName() + "!"); // mostrando para usuário que já está reconhecido
 			interactionStage = 3;
-			stage3();
+			stage3(); // pulando para próxima etapa
 		} else {
 			bot.sendMessage(id, greeting + ", cliente!");
 			bot.sendMessage(id, "Por favor, informe seu nome: ");
@@ -180,61 +244,84 @@ public class Session implements Runnable {
 			interactionStage = 2;
 		}
 	}
-
+	
+	/*
+	 * stage2
+	 * Objetivo: realizar cadastro de usuário
+	 * Retorno: nenhum
+	 * Parâmetros: nenhum
+	 */
 	private void stage2() throws TelegramApiException {
 		String id = String.valueOf(chatId);
-		if (client.getName() == null) {
-			if (!m.getText().isBlank()) {
+		if (client.getName() == null) {	// se nome retornado do objeto é nulo (não existe registrado)
+			if (!m.getText().isBlank()) { // se não estiver em branco
 				client.setName(m.getText());
-				bot.sendMessage(id, "Entendi. Seu nome é " + client.getName());
-				bot.sendMessage(id, "Por favor, informe seu cpf/cnpj:");
+				bot.sendMessage(id, "Entendi. Seu nome é " + client.getName());	// informando que já conhece usuário
+				bot.sendMessage(id, "Por favor, informe seu cpf/cnpj:"); // pedindo cpf ou cnpj
 			} else
-				bot.sendMessage(id, "Seu nome não pode estar em branco. Tente novamente.");
+				bot.sendMessage(id, "Seu nome não pode estar em branco. Tente novamente."); // caso nome esteja em branco
 			return;
-		} else if (client.getCpfCnpj() == null) {
-			if (isCpfCnpjValid(m.getText())) {
-				client.setCpfCnpj(m.getText());
+		} else if (client.getCpfCnpj() == null) { // tratamento cnpj/cpf caso não esteja registrado
+			if (isCpfCnpjValid(m.getText())) { // validando se está digitado conforme regras do negócio e se sim, segue no bloco
+				client.setCpfCnpj(m.getText());  // registrando cpf, cnpj no objeto
 				bot.sendMessage(id, "Entendi. Seu cpf/cnpj é " + client.getCpfCnpj());
-				bot.sendMessage(id, "Por favor, informe seu número de telefone:");
-			} else
+				bot.sendMessage(id, "Por favor, informe seu número de telefone:"); // coletando telefone
+			} else // caso cpf/cnpj não passe na verificação
 				bot.sendMessage(id, "O cpf/cnpj informado não é válido. Tente novamente.");
 			return;
-		} else {
-			if (isPhoneNumberValid(m.getText())) {
+		} else { // caso o nome e o cpj esteja registrado
+			if (isPhoneNumberValid(m.getText())) { // validando telefone
 				client.setPhoneNumber(m.getText());
 				HttpHeaders headers = new HttpHeaders();
 				headers.setContentType(MediaType.APPLICATION_JSON);
 				HttpEntity<ClientDto> requestEntity = new HttpEntity<ClientDto>(client, headers);
 				restTemplate.postForObject(URlBase.concat("client/").concat(id), requestEntity, ClientDto.class);
-				bot.sendMessage(id, "Entendi. Seu número de telefone é " + client.getPhoneNumber());
+				bot.sendMessage(id, "Entendi. Seu número de telefone é " + client.getPhoneNumber()); // dando ok que com o recebimento de um telefone válido 
 				bot.sendMessage(id, "Parabéns. Você foi cadastrado no sistema.");
 				interactionStage = 3;
-				stage3();
-			} else
+				stage3(); // pula para etapa 3
+			} else // telefone informado não é válido
 				bot.sendMessage(id, "O número de telefone informado não é válido. Tente novamente.");
 			return;
 		}
 	}
 
+	/*
+	 * stage3
+	 * Objetivo: tratar categorias
+	 * Retorno: nenhum
+	 * Parâmetros: nenhum
+	 */
 	private void stage3() throws TelegramApiException {
-		String id = String.valueOf(chatId);
+		String id = String.valueOf(chatId); // obtendo id
 		categories = restTemplate.getForObject(URlBase.concat("category"), CategoryDto[].class);
-		if (categories == null || (categories != null && categories.length == 0)) {
+		if (categories == null || (categories != null && categories.length == 0)) { // quando não há categoria registrada
 			bot.sendMessage(id, "Não há categorias no banco. Volte mais tarde.");
 			interactionStage = -1;
 			exit = true;
-			return;
+			return; // sai do método
 		}
+		// quando há categorias registradas
 		bot.sendMessage(id, "Escolha um código de categoria:");
 		String categoryList = new String();
-		for (int i = 0; i < categories.length; i++) {
+		for (int i = 0; i < categories.length; i++) { // percorre cetegorias e armazena em vetor
 			CategoryDto c = categories[i];
 			categoryList += (c.getId()) + ": " + c.getDescription() + "\n";
 		}
-		bot.sendMessage(id, categoryList);
+		bot.sendMessage(id, categoryList); // mostrando categorias para usuario
 		interactionStage = 4;
 	}
 
+	
+	
+	
+	
+	/*
+	 * stage3
+	 * Objetivo: tratar categorias
+	 * Retorno: nenhum
+	 * Parâmetros: nenhum
+	 */
 	private void stage4() throws TelegramApiException {
 		categories = restTemplate.getForObject(URlBase.concat("category"), CategoryDto[].class);
 
@@ -340,19 +427,42 @@ public class Session implements Runnable {
 		}
 	}
 
-	// Getters e setters
+	/*
+	 * getChatId
+	 * Objetivo: retornar o thread do objeto relacionado
+	 * Retorno: long
+	 * Parâmetros: nenhum
+	 */
 	public long getChatId() {
 		return chatId;
 	}
 
+	/*
+	 * setChatId
+	 * Objetivo: setar o chatId do objeto relacionado
+	 * Retorno: void
+	 * Parâmetros: long chatId
+	 */
 	public void setChatId(long chatId) {
 		this.chatId = chatId;
 	}
 
+	/*
+	 * getThread
+	 * Objetivo: retornar a thread do objeto relacionado
+	 * Retorno: thread
+	 * Parâmetros: nenhum
+	 */
 	public Thread getThread() {
 		return thread;
 	}
 
+	/*
+	 * setThread
+	 * Objetivo: setar a thread do objeto relacionado
+	 * Retorno: void
+	 * Parâmetros: Thread thread
+	 */
 	public void setThread(Thread thread) {
 		this.thread = thread;
 	}

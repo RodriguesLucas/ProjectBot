@@ -219,9 +219,11 @@ public class Session implements Runnable {
 	private void stage3() throws TelegramApiException {
 		String id = String.valueOf(chatId);
 		categories = restTemplate.getForObject(URlBase.concat("category"), CategoryDto[].class);
-		if (categories == null) {
+		if (categories == null || (categories != null && categories.length == 0)) {
 			bot.sendMessage(id, "Não há categorias no banco. Volte mais tarde.");
 			interactionStage = -1;
+			exit = true;
+			return;
 		}
 		bot.sendMessage(id, "Escolha um código de categoria:");
 		String categoryList = new String();

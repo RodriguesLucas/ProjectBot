@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.unisc.project.dtos.ClientAllInfoDto;
 import br.com.unisc.project.dtos.ClientDto;
-import br.com.unisc.project.dtos.ClienteAllDto;
 import br.com.unisc.project.service.ClientService;
 
 @RestController
@@ -31,7 +31,7 @@ public class ClientController {
 	}
 	
 	@GetMapping("/allInfo")
-	public List<ClienteAllDto> findAllClientsAllInfo() {
+	public List<ClientAllInfoDto> findAllClientsAllInfo() {
 		return clientService.findAllClientsAllInfo();
 	}
 	

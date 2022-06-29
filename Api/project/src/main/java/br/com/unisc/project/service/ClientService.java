@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.unisc.project.dtos.ClientAllInfoDto;
 import br.com.unisc.project.dtos.ClientDto;
-import br.com.unisc.project.dtos.ClienteAllDto;
 import br.com.unisc.project.dtos.HistoryDto;
 import br.com.unisc.project.dtos.ProductDto;
 import br.com.unisc.project.entities.ClientEntity;
@@ -63,30 +63,29 @@ public class ClientService {
 		throw new RuntimeException("Cliente já existe!");
 	}
 
-	public List<ClienteAllDto> findAllClientsAllInfo() {
+	public List<ClientAllInfoDto> findAllClientsAllInfo() {
 		List<ClientDto> clientDtos = findAll();
 		List<ProductEntity> productEntities = productRepository.findAll();
 		List<ProductDto> productDtos = productEntities.stream().map(ProductDto::new).collect(Collectors.toList());
-		List<ClienteAllDto> dtos = new ArrayList<>();
+		List<ClientAllInfoDto> dtos = new ArrayList<>();
 		for (ClientDto c : clientDtos) {
-			ClienteAllDto client = new ClienteAllDto(
+			ClientAllInfoDto client = new ClientAllInfoDto(
 					c.getChatId(), c.getCpfCnpj(), c.getName(), c.getPhoneNumber(), 0, 0);
 			List<HistoryEntity> historyEntities = historyRepository.findByClientId(c.getChatId());
 			List<HistoryDto> historyDtos = historyEntities.stream().map(HistoryDto::new).collect(Collectors.toList());
 			long count = 0;
 			BigDecimal mean = new BigDecimal(0);
 			for (HistoryDto h : historyDtos) {
-				if (h.getClientId() == c.getChatId()) {
+				if (h.getClientId().longValue() == c.getChatId().longValue()) {
 					count++;
 					mean.add(findPriceById(h.getProductId(), productDtos));
-				}
-				
+				}				
 			}
 			if(count == 0)
 				continue;
 			client.setNumQueries(count);
 			client.setPriceMean((mean.divide(new BigDecimal(count))).doubleValue());
-
+			dtos.add(client);
 		}
 		return dtos;
 	}

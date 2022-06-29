@@ -74,27 +74,27 @@ public class ClientService {
 			List<HistoryEntity> historyEntities = historyRepository.findByClientId(c.getChatId());
 			List<HistoryDto> historyDtos = historyEntities.stream().map(HistoryDto::new).collect(Collectors.toList());
 			long count = 0;
-			BigDecimal mean = new BigDecimal(0);
+			double mean = 0.0;
 			for (HistoryDto h : historyDtos) {
 				if (h.getClientId().longValue() == c.getChatId().longValue()) {
 					count++;
-					mean.add(findPriceById(h.getProductId(), productDtos));
+					mean += findPriceById(h.getProductId(), productDtos);
 				}				
 			}
 			if(count == 0)
 				continue;
 			client.setNumQueries(count);
-			client.setPriceMean((mean.divide(new BigDecimal(count))).doubleValue());
+			client.setPriceMean(mean / count);
 			dtos.add(client);
 		}
 		return dtos;
 	}
 	
-	private BigDecimal findPriceById(long id, List<ProductDto> pList) {
+	private double findPriceById(long id, List<ProductDto> pList) {
 		for(ProductDto p : pList) {
-			if(p.getId() == id)
-				return p.getPrice();
+			if(p.getId().longValue() == id)
+				return p.getPrice().doubleValue();
 		}
-		return null;
+		return 0.0;
 	}
 }

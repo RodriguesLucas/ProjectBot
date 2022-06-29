@@ -22,8 +22,8 @@ public class ProductViewController {
 			JComboBox<CategoryDto> comboBoxProductCategoryDelete, JComboBox<ProductDto> comboBoxDescriptionEdit, JComboBox<ProductDto> comboBoxProductDelete) {
 		productViewService.insertComboBoxProductAddAndEdit(comboBoxProductCategoryAdd);
 		productViewService.insertComboBoxProductAddAndEdit(comboBoxNewProductCategoryEdit);
-		productViewService.setComboBoxNewProductCategoryEdit(comboBoxProductCategoryEdit, comboBoxDescriptionEdit);
-		productViewService.setComboBoxDelete(comboBoxProductCategoryDelete, comboBoxProductDelete);
+		productViewService.insertComboBoxProductCategoryEdit(comboBoxProductCategoryEdit);
+		productViewService.insertComboBoxProductCategoryDel(comboBoxProductCategoryDelete);
 	}
 
 	public void updateComboBoxProductCategoryEdit(JComboBox<CategoryDto> comboBoxProductCategoryEdit) {
@@ -32,7 +32,7 @@ public class ProductViewController {
 	
 	public void setComboBoxDelete(JComboBox<CategoryDto> comboBoxProductCategoryDelete,
 			JComboBox<ProductDto> comboBoxProductDelete) {
-		productViewService.setComboBoxDelete(comboBoxProductCategoryDelete, comboBoxProductDelete);
+		productViewService.setComboBoxDeleteUpdate(comboBoxProductCategoryDelete, comboBoxProductDelete);
 	}
 	
 	public byte[] getPhotoByte(ProductView productView) {
@@ -65,7 +65,7 @@ public class ProductViewController {
 
 	public void setComboBoxNewProductCategoryEdit(JComboBox<CategoryDto> comboBoxProductCategoryEdit,
 			JComboBox<ProductDto> comboBoxNewProductCategoryEdit) {
-		productViewService.setComboBoxNewProductCategoryEdit(
+		productViewService.setComboBoxNewProductCategory(
 				comboBoxProductCategoryEdit, comboBoxNewProductCategoryEdit);
 	}
 

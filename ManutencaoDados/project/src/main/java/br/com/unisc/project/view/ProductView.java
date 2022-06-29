@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 
@@ -322,7 +323,8 @@ public class ProductView extends JFrame {
 		productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
 				comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit,
 				comboBoxDescriptionEdit);
-
+		
+		
 		// funções dos botões
 		// Adicionar produto
 		buttonConfirmAdd.addActionListener(new ActionListener() {
@@ -332,10 +334,8 @@ public class ProductView extends JFrame {
 				}
 				productViewController.addProduct(comboBoxProductCategoryAdd, textFieldProductInfoAdd, textFieldPriceAdd,
 						textFieldDescriptionAdd, bs, ProductView.this);
-
-				productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
-						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit,
-						comboBoxProductDelete);
+				
+				ProductView.this.dispose();
 			}
 		});
 
@@ -363,10 +363,7 @@ public class ProductView extends JFrame {
 				productViewController.editProduct(bs, comboBoxDescriptionEdit, textFieldNewDescriptionEdit,
 						comboBoxNewProductCategoryEdit, textFieldPriceEdit, textFieldProductInfoEdit,
 						comboBoxProductCategoryEdit, ProductView.this);
-
-				productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
-						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit,
-						comboBoxDescriptionEdit);
+				ProductView.this.dispose();
 			}
 		});
 
@@ -380,9 +377,7 @@ public class ProductView extends JFrame {
 		buttonConfirmDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				productViewController.delete(comboBoxProductDelete);
-				productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
-						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit,
-						comboBoxProductDelete);
+				ProductView.this.dispose();
 			}
 		});
 
@@ -392,6 +387,7 @@ public class ProductView extends JFrame {
 				productViewController.setComboBoxDelete(comboBoxProductCategoryDelete, comboBoxProductDelete);
 			}
 		});
+		
 
 		// Funcionalidades dos botões de cancelar
 		buttonCancelAdd.addActionListener(new ActionListener() {

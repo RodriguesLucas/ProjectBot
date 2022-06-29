@@ -1,1 +1,0 @@
-insert (id, description, category_parent_id)  from category values (1, teste, null);

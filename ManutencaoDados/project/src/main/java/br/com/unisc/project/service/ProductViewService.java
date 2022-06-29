@@ -103,6 +103,24 @@ public class ProductViewService {
 		}
 	}
 
+	public void setComboBoxNewProductCategory(JComboBox<CategoryDto> comboBoxProductCategoryEdit,
+			JComboBox<ProductDto> comboBoxNewProductCategoryEdit) {
+		CategoryDto dto = (CategoryDto) comboBoxProductCategoryEdit.getSelectedItem();
+		ProductDto[] productDtos = findProductByCategoryId(dto.getId());
+		comboBoxNewProductCategoryEdit.removeAllItems();
+		for (ProductDto productDto : productDtos) {
+			comboBoxNewProductCategoryEdit.addItem(productDto);
+		}
+	}
+
+	public void insertComboBoxProductCategoryDel(JComboBox<CategoryDto> comboBoxProductCategoryDelete) {
+		CategoryDto[] categoryDtos = findCategoryDel();
+		comboBoxProductCategoryDelete.removeAllItems();
+		for (CategoryDto categoryDto : categoryDtos) {
+			comboBoxProductCategoryDelete.addItem(categoryDto);
+		}
+	}
+
 	// Insert na tela de delete
 	public void setComboBoxDelete(JComboBox<CategoryDto> comboBoxProductCategoryDelete,
 			JComboBox<ProductDto> comboBoxProductDelete) {
@@ -115,11 +133,13 @@ public class ProductViewService {
 		}
 	}
 
-	private void insertComboBoxProductCategoryDel(JComboBox<CategoryDto> comboBoxProductCategoryDelete) {
-		CategoryDto[] categoryDtos = findCategoryDel();
-		comboBoxProductCategoryDelete.removeAllItems();
-		for (CategoryDto categoryDto : categoryDtos) {
-			comboBoxProductCategoryDelete.addItem(categoryDto);
+	public void setComboBoxDeleteUpdate(JComboBox<CategoryDto> comboBoxProductCategoryDelete,
+			JComboBox<ProductDto> comboBoxProductDelete) {
+		CategoryDto dto = (CategoryDto) comboBoxProductCategoryDelete.getSelectedItem();
+		ProductDto[] productDtos = findAllProductyForDel(dto.getId());
+		comboBoxProductDelete.removeAllItems();
+		for (ProductDto productDto : productDtos) {
+			comboBoxProductDelete.addItem(productDto);
 		}
 	}
 
@@ -200,4 +220,5 @@ public class ProductViewService {
 		return ResponseEntity.ok().body(new ProductDto());
 
 	}
+
 }

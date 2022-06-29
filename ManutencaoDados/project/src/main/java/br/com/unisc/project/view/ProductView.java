@@ -21,7 +21,6 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 
@@ -357,8 +356,8 @@ public class ProductView extends JFrame {
 						comboBoxProductCategoryEdit, ProductView.this);
 
 				productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
-						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit, comboBoxDescriptionEdit);
-
+						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit,
+						comboBoxDescriptionEdit);
 			}
 		});
 
@@ -371,8 +370,7 @@ public class ProductView extends JFrame {
 
 		buttonConfirmDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
+				productViewController.delete(comboBoxProductDelete);
 				productViewController.setData(comboBoxProductCategoryAdd, comboBoxNewProductCategoryEdit,
 						comboBoxProductCategoryEdit, comboBoxProductCategoryDelete, comboBoxDescriptionEdit,
 						comboBoxProductDelete);
@@ -382,7 +380,6 @@ public class ProductView extends JFrame {
 		// monitora a comboBox do delete
 		comboBoxProductCategoryDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				productViewController.setComboBoxDelete(comboBoxProductCategoryDelete, comboBoxProductDelete);
 			}
 		});

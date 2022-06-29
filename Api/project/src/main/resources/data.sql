@@ -1,0 +1,1 @@
+insert (id, description, category_parent_id) 

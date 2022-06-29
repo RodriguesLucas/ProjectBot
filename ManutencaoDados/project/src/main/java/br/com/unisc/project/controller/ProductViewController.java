@@ -89,9 +89,11 @@ public class ProductViewController {
 			JOptionPane.showMessageDialog(productView, "Não há categorias no banco!", "Atenção!",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
-
 	}
 
+	public void delete(JComboBox<ProductDto> comboBoxProductDelete) {
+		productViewService.delete((ProductDto) comboBoxProductDelete.getSelectedItem());
+	}
 	
 
 }

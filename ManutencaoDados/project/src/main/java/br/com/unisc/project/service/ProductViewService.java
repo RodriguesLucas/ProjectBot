@@ -45,7 +45,6 @@ public class ProductViewService {
 		CategoryDto[] categoryDto = restTemplate.getForObject(uri, CategoryDto[].class);
 		return categoryDto;
 	}
-	
 
 	private CategoryDto[] findCategoryDel() {
 		String uri = URlBaseCategory.concat("/categoryDel");
@@ -68,7 +67,7 @@ public class ProductViewService {
 		ProductDto[] productDtos = restTemplate.getForObject(uri, ProductDto[].class);
 		return productDtos;
 	}
-	
+
 	private ProductDto[] findAllProductyForDel(Long id) {
 		String uri = URlBase.concat("/categoryDel/".concat(id.toString()));
 		RestTemplate restTemplate = new RestTemplate();
@@ -103,8 +102,8 @@ public class ProductViewService {
 			comboBoxNewProductCategoryEdit.addItem(productDto);
 		}
 	}
-	
-	//Insert na tela de delete
+
+	// Insert na tela de delete
 	public void setComboBoxDelete(JComboBox<CategoryDto> comboBoxProductCategoryDelete,
 			JComboBox<ProductDto> comboBoxProductDelete) {
 		insertComboBoxProductCategoryDel(comboBoxProductCategoryDelete);
@@ -192,5 +191,13 @@ public class ProductViewService {
 		textFieldProductInfoEdit.setText("");
 		bs = null;
 		return ResponseEntity.ok().body(productDto);
+	}
+
+	public ResponseEntity<ProductDto> delete(ProductDto dto) {
+		String uri = URlBase.concat("/" + dto.getId());
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.delete(uri);
+		return ResponseEntity.ok().body(new ProductDto());
+
 	}
 }

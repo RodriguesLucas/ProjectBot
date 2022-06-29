@@ -1,6 +1,5 @@
 package br.com.unisc.project.dtos;
 
-import br.com.unisc.project.entities.ClientAllInfoEntity;
 
 public class ClientAllInfoDto {
 	private Long chatId;
@@ -10,14 +9,6 @@ public class ClientAllInfoDto {
 	private long numQueries;
 	private double priceMean;
 
-	public ClientAllInfoDto(ClientAllInfoEntity entity) {
-		this.chatId = entity.getId();
-		this.cpfCnpj = entity.getCpf_cnpj();
-		this.name = entity.getName();
-		this.phoneNumber = entity.getPhone();
-		this.numQueries = entity.getNumQueries();
-		this.priceMean = entity.getPriceMean();
-	}
 	
 	public ClientAllInfoDto() {
 	}

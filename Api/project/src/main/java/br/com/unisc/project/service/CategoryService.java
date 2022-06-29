@@ -25,10 +25,9 @@ public class CategoryService {
 	public List<CategoryDto> findAllCategoryDel() {
 		List<CategoryEntity> categoryEntities = categoryRepository.findCategoryDel();
 		return categoryEntities.stream().map(CategoryDto::new).collect(Collectors.toList());
-		
-		
+
 	}
-	
+
 	public List<CategoryDto> findAllCategoriesForProductAdd() {
 		List<CategoryEntity> findAllCategoriesForProductAdd = categoryRepository.findAllCategoriesForProductAdd();
 		return findAllCategoriesForProductAdd.stream().map(CategoryDto::new).collect(Collectors.toList());
@@ -42,12 +41,12 @@ public class CategoryService {
 	public List<CategoryDto> findChildrenById(Long id) {
 		return categoryRepository.findAllByParentId(id).stream().map(CategoryDto::new).collect(Collectors.toList());
 	}
-	
+
 	public CategoryDto findByNameCategory(String name) {
 		Optional<CategoryEntity> findByDescription = categoryRepository.findByDescription(name);
 		return new CategoryDto(findByDescription.get());
 	}
-	
+
 	public CategoryDto findCategoryById(Long id) {
 		Optional<CategoryEntity> findById = categoryRepository.findById(id);
 		return new CategoryDto(findById.get());
@@ -87,19 +86,14 @@ public class CategoryService {
 			Optional<CategoryEntity> optionalCategoryOptional = categoryRepository
 					.findById(categoryDto.getCategoryParentId());
 			if (optionalCategoryOptional.isPresent()) {
-				Optional<CategoryEntity> findDescriptionOptional = categoryRepository
-						.findByDescription(categoryDto.getDescription());
-				if (!findDescriptionOptional.isPresent()) {
-					Optional<ProductEntity> productOptional = productRepository
-							.findByCategoryEntityId(categoryDto.getCategoryParentId());
-					if (!productOptional.isPresent()) {
-						entity.setDescription(categoryDto.getDescription());
-						entity.setCategoryParent(optionalCategoryOptional.get());
-						return ResponseEntity.ok().body(new CategoryDto(categoryRepository.save(entity)));
-					}
-					throw new RuntimeException("Produto ligado a essa categoria!");
+				Optional<ProductEntity> productOptional = productRepository
+						.findByCategoryEntityId(categoryDto.getCategoryParentId());
+				if (!productOptional.isPresent()) {
+					entity.setDescription(categoryDto.getDescription());
+					entity.setCategoryParent(optionalCategoryOptional.get());
+					return ResponseEntity.ok().body(new CategoryDto(categoryRepository.save(entity)));
 				}
-				throw new RuntimeException("Descrição já contém no banco de dados!");
+				throw new RuntimeException("Produto ligado a essa categoria!");
 			}
 			throw new RuntimeException("Categoria pai não existe!");
 		}
@@ -113,16 +107,12 @@ public class CategoryService {
 			if (categoryParentOptional.isPresent()) {
 				Optional<ProductEntity> productCategoryOptional = productRepository.findByCategoryEntityId(id);
 				if (!productCategoryOptional.isPresent()) {
-					Optional<CategoryEntity> findDescriptionOptional = categoryRepository
-							.findByDescription(categoryDto.getDescription());
-					if (!findDescriptionOptional.isPresent()) {
-						CategoryEntity categoryEntity = new CategoryEntity();
-						categoryEntity.setId(id);
-						categoryEntity.setDescription(categoryDto.getDescription());
-						categoryEntity.setCategoryParent(categoryParentOptional.get());
-						return new CategoryDto(categoryRepository.save(categoryEntity));
-					}
-					throw new RuntimeException("Nome já existe no banco!");
+
+					CategoryEntity categoryEntity = new CategoryEntity();
+					categoryEntity.setId(id);
+					categoryEntity.setDescription(categoryDto.getDescription());
+					categoryEntity.setCategoryParent(categoryParentOptional.get());
+					return new CategoryDto(categoryRepository.save(categoryEntity));
 				}
 				throw new RuntimeException("Categoria ligado a um produto!");
 			}
@@ -130,16 +120,12 @@ public class CategoryService {
 		} else {
 			Optional<ProductEntity> productCategoryOptional = productRepository.findByCategoryEntityId(id);
 			if (!productCategoryOptional.isPresent()) {
-				Optional<CategoryEntity> findDescriptionOptional = categoryRepository
-						.findByDescription(categoryDto.getDescription());
-				if (!findDescriptionOptional.isPresent()) {
-					CategoryEntity categoryEntity = new CategoryEntity();
-					categoryEntity.setId(id);
-					categoryEntity.setDescription(categoryDto.getDescription());
-					categoryEntity.setCategoryParent(null);
-					return new CategoryDto(categoryRepository.save(categoryEntity));
-				}
-				throw new RuntimeException("Nome já existe no banco!");
+
+				CategoryEntity categoryEntity = new CategoryEntity();
+				categoryEntity.setId(id);
+				categoryEntity.setDescription(categoryDto.getDescription());
+				categoryEntity.setCategoryParent(null);
+				return new CategoryDto(categoryRepository.save(categoryEntity));
 			}
 			throw new RuntimeException("Categoria ligado a um produto!");
 		}

@@ -118,20 +118,20 @@ public class CategoryViewService {
 		restTemplate.postForEntity(uri, requestEntity, CategoryDto.class);
 		textFieldDescriptionAdd.setText("");
 		return ResponseEntity.ok().body(dto);
-	}
+	} 
 
 	// Edita categoria do banco
 	public ResponseEntity<CategoryDto> putCategory(CategoryDto comboBoxCategoryParentEdit,
-			CategoryDto comboBoxCategoryEdit, String textFieldNewDescriptionEdit) {
+			CategoryDto comboBoxCategoryEdit, JTextField textFieldNewDescriptionEdit) {
 		CategoryDto categoryDto = new CategoryDto();
-		if (!textFieldNewDescriptionEdit.trim().isEmpty()) {
+		if (!textFieldNewDescriptionEdit.getText().trim().isEmpty()) {
 			if (comboBoxCategoryParentEdit.getId() != 0l) {
 				CategoryDto categoryParentDto = findCategoryById(comboBoxCategoryParentEdit.getId());
 				categoryDto.setCategoryParentId(categoryParentDto.getId());
 			} else {
 				categoryDto.setCategoryParentId(null);
 			}
-			categoryDto.setDescription(textFieldNewDescriptionEdit);
+			categoryDto.setDescription(textFieldNewDescriptionEdit.getText());
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -143,6 +143,7 @@ public class CategoryViewService {
 			}
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.put(uri, categoryDto);
+			textFieldNewDescriptionEdit.setText("");
 			return ResponseEntity.ok().body(categoryDto);
 		}
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CategoryDto());

@@ -1,6 +1,8 @@
 package br.com.unisc.project.controller;
 
 import java.io.File;
+import java.math.BigDecimal;
+
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -19,7 +21,8 @@ public class ProductViewController {
 
 	public void setData(JComboBox<CategoryDto> comboBoxProductCategoryAdd,
 			JComboBox<CategoryDto> comboBoxNewProductCategoryEdit, JComboBox<CategoryDto> comboBoxProductCategoryEdit,
-			JComboBox<CategoryDto> comboBoxProductCategoryDelete, JComboBox<ProductDto> comboBoxDescriptionEdit, JComboBox<ProductDto> comboBoxProductDelete) {
+			JComboBox<CategoryDto> comboBoxProductCategoryDelete, JComboBox<ProductDto> comboBoxDescriptionEdit,
+			JComboBox<ProductDto> comboBoxProductDelete) {
 		productViewService.insertComboBoxProductAddAndEdit(comboBoxProductCategoryAdd);
 		productViewService.insertComboBoxProductAddAndEdit(comboBoxNewProductCategoryEdit);
 		productViewService.insertComboBoxProductCategoryEdit(comboBoxProductCategoryEdit);
@@ -29,12 +32,12 @@ public class ProductViewController {
 	public void updateComboBoxProductCategoryEdit(JComboBox<CategoryDto> comboBoxProductCategoryEdit) {
 		productViewService.insertComboBoxProductCategoryEdit(comboBoxProductCategoryEdit);
 	}
-	
+
 	public void setComboBoxDelete(JComboBox<CategoryDto> comboBoxProductCategoryDelete,
 			JComboBox<ProductDto> comboBoxProductDelete) {
 		productViewService.setComboBoxDeleteUpdate(comboBoxProductCategoryDelete, comboBoxProductDelete);
 	}
-	
+
 	public byte[] getPhotoByte(ProductView productView) {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setName("Imagem");
@@ -47,9 +50,18 @@ public class ProductViewController {
 	public void addProduct(JComboBox<CategoryDto> comboBoxProductCategoryAdd, JTextField textFieldProductInfoAdd,
 			JTextField textFieldPriceAdd, JTextField textFieldDescriptionAdd, byte[] bs, ProductView productView) {
 		if (comboBoxProductCategoryAdd.getSelectedItem() != null) {
-			ResponseEntity<ProductDto> responseEntity = productViewService.addProduct(
-					(CategoryDto) comboBoxProductCategoryAdd.getSelectedItem(), textFieldProductInfoAdd,
-					textFieldPriceAdd, textFieldDescriptionAdd, bs);
+			ResponseEntity<ProductDto> responseEntity = null;
+			try {
+				BigDecimal.valueOf(Double.valueOf(textFieldPriceAdd.getText()));
+				responseEntity = productViewService.addProduct(
+						(CategoryDto) comboBoxProductCategoryAdd.getSelectedItem(), textFieldProductInfoAdd,
+						textFieldPriceAdd, textFieldDescriptionAdd, bs);
+			} catch (Exception e) {
+				textFieldPriceAdd.setText("");
+				JOptionPane.showMessageDialog(productView, "Insira um valor válido no preço!", "Atenção!",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+
 			if (responseEntity.getStatusCode() == HttpStatus.NO_CONTENT) {
 				JOptionPane.showMessageDialog(productView, "Algum campo de texto está vazio!", "Atenção!",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -65,8 +77,7 @@ public class ProductViewController {
 
 	public void setComboBoxNewProductCategoryEdit(JComboBox<CategoryDto> comboBoxProductCategoryEdit,
 			JComboBox<ProductDto> comboBoxNewProductCategoryEdit) {
-		productViewService.setComboBoxNewProductCategory(
-				comboBoxProductCategoryEdit, comboBoxNewProductCategoryEdit);
+		productViewService.setComboBoxNewProductCategory(comboBoxProductCategoryEdit, comboBoxNewProductCategoryEdit);
 	}
 
 	public void editProduct(byte[] bs, JComboBox<ProductDto> comboBoxDescriptionEdit,
@@ -74,10 +85,19 @@ public class ProductViewController {
 			JTextField textFieldPriceEdit, JTextField textFieldProductInfoEdit,
 			JComboBox<CategoryDto> comboBoxProductCategoryEdit, ProductView productView) {
 		if (comboBoxProductCategoryEdit.getSelectedItem() != null) {
-			ResponseEntity<ProductDto> responseEntity = productViewService.editProduct(bs,
-					(ProductDto) comboBoxDescriptionEdit.getSelectedItem(), textFieldNewDescriptionEdit,
-					(CategoryDto) comboBoxNewProductCategoryEdit.getSelectedItem(), textFieldPriceEdit,
-					textFieldProductInfoEdit);
+
+			ResponseEntity<ProductDto> responseEntity = null;
+			try {
+				BigDecimal.valueOf(Double.valueOf(textFieldPriceEdit.getText()));
+				responseEntity = productViewService.editProduct(bs,
+						(ProductDto) comboBoxDescriptionEdit.getSelectedItem(), textFieldNewDescriptionEdit,
+						(CategoryDto) comboBoxNewProductCategoryEdit.getSelectedItem(), textFieldPriceEdit,
+						textFieldProductInfoEdit);
+			} catch (Exception e) {
+				textFieldPriceEdit.setText("");
+				JOptionPane.showMessageDialog(productView, "Insira um valor válido no preço!", "Atenção!",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
 			if (responseEntity.getStatusCode() == HttpStatus.NO_CONTENT) {
 				JOptionPane.showMessageDialog(productView, "Algum campo de texto está vazio!", "Atenção!",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -94,6 +114,5 @@ public class ProductViewController {
 	public void delete(JComboBox<ProductDto> comboBoxProductDelete) {
 		productViewService.delete((ProductDto) comboBoxProductDelete.getSelectedItem());
 	}
-	
 
 }

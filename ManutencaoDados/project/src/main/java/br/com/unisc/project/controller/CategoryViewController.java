@@ -33,7 +33,7 @@ public class CategoryViewController {
 		if (comboBoxCategoryEdit.getSelectedItem() != null) {
 			ResponseEntity<CategoryDto> entity = categoryViewService.putCategory(
 					(CategoryDto) comboBoxCategoryParentEdit.getSelectedItem(),
-					(CategoryDto) comboBoxCategoryEdit.getSelectedItem(), textFieldNewDescriptionEdit.getText());
+					(CategoryDto) comboBoxCategoryEdit.getSelectedItem(), textFieldNewDescriptionEdit);
 			if (entity.getStatusCode() == HttpStatus.NO_CONTENT) {
 				JOptionPane.showMessageDialog(categoryView, "Algum campo de texto está vazio!", "Atenção!",
 						JOptionPane.INFORMATION_MESSAGE);

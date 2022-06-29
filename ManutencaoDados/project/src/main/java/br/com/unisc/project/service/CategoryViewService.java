@@ -2,13 +2,16 @@ package br.com.unisc.project.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.unisc.project.dtos.CategoryDto;
@@ -16,51 +19,27 @@ import br.com.unisc.project.dtos.CategoryDto;
 public class CategoryViewService {
 	private static final String URlBase = "http://localhost:8080/category";
 
-	public void setComboBoxCategoryParentAdd(JComboBox comboBoxCategoryParentAdd) {
+	// Cria uma Cateria sem pai
+	private void createNACategory(JComboBox<CategoryDto> comboBoxCategoryParentAdd) {
+		CategoryDto dto = new CategoryDto();
+		dto.setId(0l);
+		dto.setDescription("N/A");
+		comboBoxCategoryParentAdd.removeAllItems();
+		comboBoxCategoryParentAdd.addItem(dto);
+	}
+
+	// Bucas na api da categoria
+	public CategoryDto[] findAllCategoryParentAdd() {
 		String uri = URlBase.concat("/addAndEdit");
 		RestTemplate restTemplate = new RestTemplate();
 		CategoryDto[] categoryDtos = restTemplate.getForObject(uri, CategoryDto[].class);
-		comboBoxCategoryParentAdd.removeAllItems();
-		comboBoxCategoryParentAdd.addItem("Sem categoria");
-		for (CategoryDto categoryDto : categoryDtos) {
-			comboBoxCategoryParentAdd.addItem(categoryDto.getDescription());
-		}
+		return categoryDtos;
 	}
-
-	public void createdNewCategory(JTextField textFieldDescriptionAdd, JComboBox comboBoxCategoryParentAdd) {
-		if (textFieldDescriptionAdd.getText() == null || textFieldDescriptionAdd.getText().trim().isEmpty()) {
-			throw new RuntimeException("Texto vazio");
-		}
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		URI uri = null;
-		try {
-			uri = new URI(URlBase.concat("/"));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		CategoryDto dto = new CategoryDto();
-		if (comboBoxCategoryParentAdd.getSelectedItem() != null
-				&& !comboBoxCategoryParentAdd.getSelectedItem().equals("Sem categoria")) {
-			CategoryDto categoryDto = findCategoryByName(comboBoxCategoryParentAdd.getSelectedItem().toString());
-			dto.setDescription(textFieldDescriptionAdd.getText());
-			dto.setCategoryParentId(categoryDto.getId());
-		} else {
-			dto.setDescription(textFieldDescriptionAdd.getText());
-			dto.setCategoryParentId(null);
-		}
-		HttpEntity<CategoryDto> requestEntity = new HttpEntity<CategoryDto>(dto, headers);
+	
+	public CategoryDto[] findCategoryParentDel() {
+		String uri = URlBase.concat("/");
 		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.postForEntity(uri, requestEntity, CategoryDto.class);
-		textFieldDescriptionAdd.setText("");
-		comboBoxCategoryParentAdd.removeAllItems();
-		setComboBoxCategoryParentAdd(comboBoxCategoryParentAdd);
-	}
-
-	public CategoryDto findCategoryByName(String name) {
-		String uri = URlBase.concat("/").concat(name);
-		RestTemplate restTemplate = new RestTemplate();
-		CategoryDto categoryDto = restTemplate.getForObject(uri, CategoryDto.class);
+		CategoryDto[] categoryDto = restTemplate.getForObject(uri, CategoryDto[].class);
 		return categoryDto;
 	}
 
@@ -71,87 +50,110 @@ public class CategoryViewService {
 		return categoryDto;
 	}
 
-	public CategoryDto[] findCategoryParentDel() {
-		String uri = URlBase.concat("/");
+	public CategoryDto findCategoryById(Long id) {
+		String uri = URlBase.concat("/id/").concat(id.toString());
 		RestTemplate restTemplate = new RestTemplate();
-		CategoryDto[] categoryDto = restTemplate.getForObject(uri, CategoryDto[].class);
+		CategoryDto categoryDto = restTemplate.getForObject(uri, CategoryDto.class);
 		return categoryDto;
 	}
 
-	public CategoryDto[] findAllCategory() {
-		String uri = URlBase;
-		RestTemplate restTemplate = new RestTemplate();
-		CategoryDto[] categoryDto = restTemplate.getForObject(uri, CategoryDto[].class);
-		return categoryDto;
+	// Seta os valores nas comboBox
+	public void setComboBoxCategoryParentAdd(JComboBox<CategoryDto> comboBoxCategoryParentAdd) {
+		createNACategory(comboBoxCategoryParentAdd);
+		CategoryDto[] categoryDtos = findAllCategoryParentAdd();
+		for (CategoryDto categoryDto : categoryDtos) {
+			comboBoxCategoryParentAdd.addItem(categoryDto);
+		}
 	}
 
-	public void setComboBoxPut(JComboBox comboBoxCategoryEdit) {
+	public void setComboBoxPut(JComboBox<CategoryDto> comboBoxCategoryEdit) {
 		CategoryDto[] categoryDtos = findCategoryParent();
 		comboBoxCategoryEdit.removeAllItems();
 		for (CategoryDto categoryDto : categoryDtos) {
-			comboBoxCategoryEdit.addItem(categoryDto.getDescription());
+			comboBoxCategoryEdit.addItem(categoryDto);
 		}
 	}
 
-	public void setComboBoxCategoryParentEdit(JComboBox comboBoxCategoryParentEdit) {
+	public void setComboBoxCategoryParentEdit(JComboBox<CategoryDto> comboBoxCategoryParentEdit) {
 		CategoryDto[] categoryDtos = findCategoryParent();
-		comboBoxCategoryParentEdit.removeAllItems();
-		comboBoxCategoryParentEdit.addItem("Sem categoria");
+		createNACategory(comboBoxCategoryParentEdit);
 		for (CategoryDto categoryDto : categoryDtos) {
-			comboBoxCategoryParentEdit.addItem(categoryDto.getDescription());
+			comboBoxCategoryParentEdit.addItem(categoryDto);
 		}
 	}
 
-	public void putCategory(JComboBox comboBoxCategoryParentEdit, JComboBox comboBoxCategoryEdit,
-			JTextField textFieldNewDescriptionEdit) {
-		if (comboBoxCategoryEdit.getSelectedItem() != null) {
-			if (!comboBoxCategoryParentEdit.getSelectedItem().toString()
-					.equals(comboBoxCategoryEdit.getSelectedItem().toString())) {
-				CategoryDto categoryDto = new CategoryDto();
-				if (!comboBoxCategoryParentEdit.getSelectedItem().toString().equals("Sem categoria")) {
-					CategoryDto categoryParentDto = findCategoryByName(
-							comboBoxCategoryParentEdit.getSelectedItem().toString());
-					categoryDto.setCategoryParentId(categoryParentDto.getId());
-				} else {
-					categoryDto.setCategoryParentId(null);
-				}
-				categoryDto.setDescription(textFieldNewDescriptionEdit.getText());
-
-				CategoryDto dto = findCategoryByName(comboBoxCategoryEdit.getSelectedItem().toString());
-				HttpHeaders headers = new HttpHeaders();
-				headers.setContentType(MediaType.APPLICATION_JSON);
-				URI uri = null;
-				try {
-					uri = new URI(URlBase.concat("/") + dto.getId());
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				}
-				RestTemplate restTemplate = new RestTemplate();
-				restTemplate.put(uri, categoryDto);
-			} else {
-				throw new RuntimeException("Categoria pai não pode ser o mesmo da categoria!");
-			}
-		} else {
-			throw new RuntimeException("Nenhuma categoria selecionada!");
-		}
-	}
-
-	public void setComboBoxCategoryDelete(JComboBox comboBoxCategoryDelete) {
+	public void setComboBoxCategoryDelete(JComboBox<CategoryDto> comboBoxCategoryDelete) {
 		CategoryDto[] categoryDtos = findCategoryParentDel();
 		comboBoxCategoryDelete.removeAllItems();
 		for (CategoryDto categoryDto : categoryDtos) {
-			comboBoxCategoryDelete.addItem(categoryDto.getDescription());
+			comboBoxCategoryDelete.addItem(categoryDto);
 		}
 	}
 
-	public void delete(JComboBox comboBoxCategoryDelete) {
-		if (comboBoxCategoryDelete.getSelectedItem() != null) {
-			CategoryDto dto = findCategoryByName(comboBoxCategoryDelete.getSelectedItem().toString());
-			String uri = URlBase.concat("/" + dto.getId());
-			RestTemplate restTemplate = new RestTemplate();
-			restTemplate.delete(uri);
-		} else {
-			throw new RuntimeException("Nenhuca categoria selecionada para excluir!");
+	// Adiciona categoria no banco
+	public ResponseEntity<CategoryDto> createdNewCategory(JTextField textFieldDescriptionAdd, CategoryDto categoryDto) {
+		if (textFieldDescriptionAdd.getText() == null || textFieldDescriptionAdd.getText().trim().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CategoryDto());
 		}
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		URI uri = null;
+		try {
+			uri = new URI(URlBase.concat("/"));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		CategoryDto dto = new CategoryDto();
+
+		if (categoryDto.getId() != 0l) {
+			CategoryDto findById = findCategoryById(categoryDto.getId());
+			dto.setDescription(textFieldDescriptionAdd.getText());
+			dto.setCategoryParentId(findById.getId());
+		} else {
+			dto.setDescription(textFieldDescriptionAdd.getText());
+			dto.setCategoryParentId(null);
+		}
+		HttpEntity<CategoryDto> requestEntity = new HttpEntity<CategoryDto>(dto, headers);
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.postForEntity(uri, requestEntity, CategoryDto.class);
+		textFieldDescriptionAdd.setText("");
+		return ResponseEntity.ok().body(dto);
+	}
+
+	// Edita categoria do banco
+	public ResponseEntity<CategoryDto> putCategory(CategoryDto comboBoxCategoryParentEdit,
+			CategoryDto comboBoxCategoryEdit, String textFieldNewDescriptionEdit) {
+		CategoryDto categoryDto = new CategoryDto();
+		if (!textFieldNewDescriptionEdit.strip().trim().isEmpty()) {
+			if (comboBoxCategoryParentEdit.getId() != 0l) {
+				CategoryDto categoryParentDto = findCategoryById(comboBoxCategoryParentEdit.getId());
+				categoryDto.setCategoryParentId(categoryParentDto.getId());
+			} else {
+				categoryDto.setCategoryParentId(null);
+			}
+			categoryDto.setDescription(textFieldNewDescriptionEdit);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			URI uri = null;
+			try {
+				uri = new URI(URlBase.concat("/") + comboBoxCategoryEdit.getId());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.put(uri, categoryDto);
+			return ResponseEntity.ok().body(categoryDto);
+		}
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new CategoryDto());
+	}
+
+	//Deleta categoria do banco
+	public ResponseEntity<CategoryDto> delete(CategoryDto categoryDto) {
+		CategoryDto dto = findCategoryById(categoryDto.getId());
+		String uri = URlBase.concat("/" + dto.getId());
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.delete(uri);
+		return ResponseEntity.ok().body(new CategoryDto());
 	}
 }

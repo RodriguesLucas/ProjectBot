@@ -6,6 +6,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 
 import br.com.unisc.project.controller.CategoryViewController;
+import br.com.unisc.project.dtos.CategoryDto;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -32,23 +33,23 @@ public class CategoryView extends JFrame {
 	private JLabel labelDescriptionAdd;
 	private JTextField textFieldDescriptionAdd;
 	private JLabel labelCategoryParentAdd;
-	private JComboBox comboBoxCategoryParentAdd;
+	private JComboBox<CategoryDto> comboBoxCategoryParentAdd;
 	private JButton buttonConfirmAdd;
 	private JButton buttonCancelAdd;
 	private JPanel panelEditCategory;
 	private JLabel labelCategoryEdit;
-	private JComboBox comboBoxCategoryEdit;
+	private JComboBox<CategoryDto> comboBoxCategoryEdit;
 	private JLabel labelNewDescriptionEdit;
 	private JTextField textFieldNewDescriptionEdit;
 	private JLabel labelCategoryParentEdit;
-	private JComboBox comboBoxCategoryParentEdit;
+	private JComboBox<CategoryDto> comboBoxCategoryParentEdit;
 	private JButton buttonConfirmEdit;
 	private JButton buttonCancelEdit;
 	private JPanel panelDeleteCategory;
 	private JLabel labelCategoryDelete;
 	private JButton buttonConfirmDelete;
 	private JButton buttonCancelDelete;
-	private JComboBox comboBoxCategoryDelete;
+	private JComboBox<CategoryDto> comboBoxCategoryDelete;
 	private CategoryViewController categoryViewController;
 
 	// Construtor
@@ -70,23 +71,23 @@ public class CategoryView extends JFrame {
 		labelDescriptionAdd = new JLabel("Descrição:", JLabel.TRAILING);
 		textFieldDescriptionAdd = new JTextField();
 		labelCategoryParentAdd = new JLabel("Categoria Pai:", JLabel.TRAILING);
-		comboBoxCategoryParentAdd = new JComboBox();
+		comboBoxCategoryParentAdd = new JComboBox<CategoryDto>();
 		buttonConfirmAdd = new JButton("Confirmar");
 		buttonCancelAdd = new JButton("Cancelar");
 		panelEditCategory = new JPanel();
 		labelCategoryEdit = new JLabel("Categoria:", JLabel.TRAILING);
-		comboBoxCategoryEdit = new JComboBox();
+		comboBoxCategoryEdit = new JComboBox<CategoryDto>();
 		labelNewDescriptionEdit = new JLabel("Descrição:", JLabel.TRAILING);
 		textFieldNewDescriptionEdit = new JTextField();
 		labelCategoryParentEdit = new JLabel("Categoria Pai:", JLabel.TRAILING);
-		comboBoxCategoryParentEdit = new JComboBox();
+		comboBoxCategoryParentEdit = new JComboBox<CategoryDto>();
 		buttonConfirmEdit = new JButton("Confirmar");
 		buttonCancelEdit = new JButton("Cancelar");
 		panelDeleteCategory = new JPanel();
 		labelCategoryDelete = new JLabel("Categoria:", JLabel.TRAILING);
 		buttonConfirmDelete = new JButton("Confirmar");
 		buttonCancelDelete = new JButton("Cancelar");
-		comboBoxCategoryDelete = new JComboBox();
+		comboBoxCategoryDelete = new JComboBox<CategoryDto>();
 
 		setContentPane(panelMain); // Define o painel da janela
 
@@ -221,21 +222,32 @@ public class CategoryView extends JFrame {
 		this.setVisible(true);
 
 		// preenche as combo Box
-		categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit,comboBoxCategoryDelete, comboBoxCategoryParentEdit);
-		
+		categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit, comboBoxCategoryDelete,
+				comboBoxCategoryParentEdit);
 
 		// açoes dos botoes
 		buttonConfirmAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				categoryViewController.createdNewCategory(textFieldDescriptionAdd, comboBoxCategoryParentAdd);
-				categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit,comboBoxCategoryDelete, comboBoxCategoryParentEdit);				
+				categoryViewController.createdNewCategory(textFieldDescriptionAdd, comboBoxCategoryParentAdd, CategoryView.this);
+				categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit, comboBoxCategoryDelete,
+						comboBoxCategoryParentEdit);
+			}
+		});
+
+		buttonConfirmEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				categoryViewController.putCategory(comboBoxCategoryParentEdit, comboBoxCategoryEdit,
+						textFieldNewDescriptionEdit, CategoryView.this);
+				categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit, comboBoxCategoryDelete,
+						comboBoxCategoryParentEdit);
 			}
 		});
 		
 		buttonConfirmDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				categoryViewController.delete(comboBoxCategoryDelete);
-				categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit,comboBoxCategoryDelete, comboBoxCategoryParentEdit);	
+				categoryViewController.delete(comboBoxCategoryDelete, CategoryView.this);
+				categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit, comboBoxCategoryDelete,
+						comboBoxCategoryParentEdit);
 			}
 		});
 
@@ -245,14 +257,13 @@ public class CategoryView extends JFrame {
 			}
 		});
 
-		buttonConfirmEdit.addActionListener(new ActionListener() {
+		buttonCancelEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				categoryViewController.putCategory(comboBoxCategoryParentEdit, comboBoxCategoryEdit, textFieldNewDescriptionEdit);
-				categoryViewController.setData(comboBoxCategoryParentAdd, comboBoxCategoryEdit,comboBoxCategoryDelete, comboBoxCategoryParentEdit);	
+				CategoryView.this.dispose();
 			}
 		});
-
-		buttonCancelEdit.addActionListener(new ActionListener() {
+		
+		buttonCancelDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CategoryView.this.dispose();
 			}

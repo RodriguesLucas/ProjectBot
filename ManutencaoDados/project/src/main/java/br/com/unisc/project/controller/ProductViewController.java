@@ -17,6 +17,8 @@ public class ProductViewController {
 		productViewService.insertComboBox(comboBoxProductCategoryAdd);
 		productViewService.insertComboBox(comboBoxNewProductCategoryEdit);
 		productViewService.insertComboBoxProductCategoryEdit(comboBoxProductCategoryEdit);
+		productViewService.setComboBoxNewProductCategoryEdit(comboBoxProductCategoryEdit,
+				comboBoxNewProductCategoryEdit);
 	}
 
 	public byte[] getPhotoByte(ProductView productView) {

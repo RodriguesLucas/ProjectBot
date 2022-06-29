@@ -312,6 +312,18 @@ public class ProductView extends JFrame {
 				comboBoxProductCategoryEdit, comboBoxProductCategoryDelete);
 		// funções dos botões
 
+		buttonProductImageEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				bs = productViewController.getPhotoByte(ProductView.this);
+			}
+		});
+		
+		buttonProductImageAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				bs = productViewController.getPhotoByte(ProductView.this);
+			}
+		});
+		
 		buttonConfirmEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (bs == null) {
@@ -326,11 +338,6 @@ public class ProductView extends JFrame {
 			}
 		});
 
-		buttonProductImageAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				bs = productViewController.getPhotoByte(ProductView.this);
-			}
-		});
 
 		comboBoxProductCategoryEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -339,6 +346,7 @@ public class ProductView extends JFrame {
 			}
 		});
 
+		
 		buttonConfirmAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (bs == null) {

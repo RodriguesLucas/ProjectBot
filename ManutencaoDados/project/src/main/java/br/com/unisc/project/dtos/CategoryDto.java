@@ -40,4 +40,10 @@ public class CategoryDto {
 		this.categoryParentId = categoryParentId;
 	}
 
+	@Override
+	public String toString() {
+		return description;
+	}
+
+	
 }
